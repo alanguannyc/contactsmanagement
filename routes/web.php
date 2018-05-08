@@ -14,3 +14,33 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/add', function () {
+    return view('newContact');
+});
+
+Route::group(['prefix' => 'api/v1'], function () {
+    Route::get('/contact', function(){
+        return $contacts=\App\Contact::with('hotel')->get();
+    });
+
+    Route::get('/hotel', function(){
+        return $contacts=App\Hotel::all();
+    });
+});
+
+Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function()
+{
+    Route::get('/', function() {
+        return view('index');
+    })->name('index');
+
+    Route::get('/contact', 'ContactController@index')->name('user');
+    // Route::get('/user/api', function () {
+    //     return $users=App\User::with(['profile'])->get();
+    // });
+});
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
