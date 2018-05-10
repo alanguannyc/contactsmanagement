@@ -3,21 +3,21 @@
 @section('content')
 <form autocomplete="off">
         <div class="form-group autocomplete">
-                <label for="exampleFormControlInput1">Hotel</label>
+                <label for="HotelInput">Hotel</label>
                 <input type="text" class="form-control" id="hotel" name="hotel" placeholder="" required>
                 </div>
         <div class="form-group">
     <div class="form-group">
-            <label for="exampleFormControlInput1">Name</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Name" required>
+            <label for="contactName">Name</label>
+            <input type="text" class="form-control" id="contactName" name="ContactName" placeholder="Enter Name" required>
             </div>
     <div class="form-group">
-      <label for="exampleFormControlInput1">Email address</label>
-      <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+      <label for="contactEmail">Email address</label>
+      <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com">
     </div>
     <div class="form-group">
-      <label for="exampleFormControlSelect1">Position</label>
-      <select class="form-control" id="exampleFormControlSelect1" placeholder="Please Select" required>
+      <label for="contactPosition">Position</label>
+      <select class="form-control" id="contactPosition" name="contactPosition" placeholder="Please Select" required>
             <option></option>
         <option>General Managers</option>
         <option>Hotel Managers</option>
@@ -39,12 +39,14 @@
       </select>
     </div>
     <div class="form-group">
-            <label for="exampleFormControlInput1">Title</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Position Title">
+            <label for="contactTitle">Title</label>
+            <input type="text" class="form-control" id="contactTitle" name="contactTitle" placeholder="Enter Position Title">
             </div>
     <div class="form-group">
-            <label for="exampleFormControlInput1">Phone Number</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number">
+            <label for="contactPhone">Phone Number</label>
+            <input type="text" class="form-control" id="contactPhone" name="contactPhone" placeholder="Enter Phone Number">
             </div>
+        <button type="submit" id="btn_add" class="btn btn-primary">Add</button>
+
 </form>
 @endsection

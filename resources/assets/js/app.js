@@ -21,6 +21,10 @@ const app = new Vue({
     el: '#app'
 });
 
+
+
+
+// datatable format
 function format ( d ) {
     if(d.profile==null) {
         d.profile="Not set" }
@@ -59,13 +63,14 @@ function format ( d ) {
     }
     
 
-
-    axios.get('api/v1/contact')
+//get contact list
+    axios.get('../api/v1/contact')
         .then(res=>{
             var newdata = res.data;
             $(document).ready( function () {
               var table = $('#user_table').DataTable(
                     {
+                        stateSave: true,
                         data:newdata,
                         columns: [
                             {
@@ -81,6 +86,7 @@ function format ( d ) {
                             { data: 'title'},
                             { data: 'phone',
                             "defaultContent": "<i>Not set</i>" },
+                            { data: 'created_at'},
                         ],
                         dom: 'Bfrtip',
                         buttons: [
@@ -128,7 +134,8 @@ function format ( d ) {
         .catch(function(err){
             console.log(err);
         });
-     
+
+    //auto complete function
         function autocomplete(inp, arr) {
             /*the autocomplete function takes two arguments,
             the text field element and an array of possible autocompleted values:*/
@@ -226,15 +233,180 @@ function format ( d ) {
           });
           }
 
-        axios.get('api/v1/hotel')
+        //update data function
+        function updateData(url, uid) {
+            var newData = {};
+            newData.id = uid;
+            $('body').find("#edit_body input").each(function(){
+                
+            var key = $(this).attr('name');
+            var val = $(this).val();
+        
+            newData[key] = val;
+            });
+            
+            axios.post(url, newData).then(res => {
+                // $('body').load(window.location.href + "#hotel_table");
+                
+            })
+        }
+
+        //delete data function
+        function deleteData(url, $id) {
+            axios.delete(url, $id).then(res => {
+
+            })
+        }
+
+        //autocomplete hotel input
+        axios.get('../api/v1/hotel')
         .then(res=>{
             var newdata = res.data;
             
             var hotels = newdata.map(a => a.name);
             
-            autocomplete(document.getElementById("hotel"), hotels);
+            autocomplete(document.getElementById("hotelName"), hotels);
         })
         .catch(function(err){
             console.log(err);
         });
      
+
+        //get hotel list
+
+        axios.get('../api/v1/hotel')
+        .then(res=>{
+            var newdata = res.data;
+            $(document).ready( function () {
+              var table = $('#hotel_table').DataTable(
+                    {
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax":{"url":"api/v1/hotel","dataSrc":""},
+                        data:newdata,
+                        columns: [
+                            {
+                                "className":      'details-control',
+                                "orderable":      false,
+                                "data":           null,
+                                "defaultContent": 'view'
+                            },
+                            { data: 'name' },
+                            { data: 'address',
+                            "defaultContent": "<i>Not set</i>"  },
+                            { data: 'created_at'},
+                            
+                        ],
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ]
+    
+                    }
+                );
+    
+                $('#hotel_table tbody').on( 'click', 'tr', function () {
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        var data = table.row( this ).data();
+                        var name = data.name;
+                        var address = data.address;
+                        var uid = table.row( this ).data().id;
+                        
+                        //hotel edit
+                            $('#modal_btn').click(function(){
+                                table.$('tr.selected').removeClass('selected');
+                                $('#exampleModalLong .modal-title').html(name)
+                                $('#hotelName').val(name);
+                                $('form #hotelAddress').val(address);
+                                $('form #btn_edit_hotel').click(function(){         
+                                    updateData('api/v1/hotel/edit', uid);
+                                    table.draw();
+                                })
+                                
+                            });
+
+                        //hotel delete
+                            $('#hotel_delete_btn').click(function(){
+                                
+                                deleteData(`api/v1/hotel/${uid}`, uid);
+                                
+                                table.$('tr.selected').removeClass('selected');
+                                table.draw();
+                            })
+            
+
+                    }
+                } );
+
+              
+    
+
+                $('#hotel_table tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+        
+                    var row = table.row( tr );
+        
+                    if ( row.child.isShown() ) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    }
+                    else {
+                        // Open this row
+                        row.child( format(row.data()) ).show();
+                        tr.addClass('shown');
+                    }
+                } );
+
+            } );
+    
+            
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+
+        //ajax new hotel/contact form
+        $(document).ready(function(){
+            $('form').on('click', '#btn_hotel', function(e){
+                e.preventDefault();
+                var newHotel={};
+                newHotel.name = $('#hotelName').val();
+                newHotel.address = $('#hotelAddress').val();
+                axios.post('../api/v1/hotel', newHotel)
+                .then(res=>{
+
+                })
+            })
+
+
+            $('form').on('click','#btn_add', function(e){
+                e.preventDefault();
+                var newHotel={};
+                newHotel.name = $('#hotel').val();
+                newHotel.address = "";
+                axios.post('../api/v1/hotel', newHotel)
+                .then(res=>{
+                    var contact = {};
+                    contact.hotel_id=res.data.id;
+                    
+                    contact.name = $('#contactName').val();
+                    contact.position = $('#contactPosition').val();
+                    contact.title = $('#contactTitle').val();
+                    contact.email =$('#contactEmail').val();
+                    contact.phone =$('#contactPhone').val();
+                    
+                    axios.post('../api/v1/contact', contact)
+                    .then(res => {
+                        console.log(res)
+                    })
+                })
+            })
+        });
+
+    

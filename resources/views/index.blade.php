@@ -17,6 +17,7 @@
             <th>Position</th>
             <th>Title</th>
             <th>Phone</th>
+            <th>Added Date</th>
         </tr>
     </thead>
     

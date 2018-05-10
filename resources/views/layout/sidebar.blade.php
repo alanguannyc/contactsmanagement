@@ -2,14 +2,22 @@
     <div class="menu_section">
       <h3>General</h3>
       <ul class="nav side-menu">
-        <li><a href="/admin"><i class="fa fa-home"></i> Home </a>
-          
+        <li><a href="/admin"><i class="fa fa-home"></i> Home </a></li>
+        
+
+        <li><a><i class="fa fa-users"></i> Contact <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/admin"><i class="fa fa-list-ul"></i> Index</a></li>
+            <li><a href="/add/contact"><i class="fa fa-edit"></i> Add New</a></li>
+          </ul>
         </li>
-        <li><a href="/add"><i class="fa fa-edit"></i> New Contact </a></li>
-        <li><a><i class="fa fa-edit"></i> Company </a></li>
-        <li><a><i class="fa fa-edit"></i> Contact </a></li>
-        
-        
+
+        <li><a><i class="fa fa-bed"></i> Hotel <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/hotel"><i class="fa fa-list-ul"></i> Index</a></li>
+            <li><a href="/add/hotel"><i class="fa fa-edit"></i> Add New</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
     

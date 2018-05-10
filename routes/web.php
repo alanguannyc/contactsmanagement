@@ -14,10 +14,25 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/add', function () {
-    return view('newContact');
+Route::get('/hotel', function () {
+    return view('hotelIndex');
 });
+
+Route::group(['prefix' => 'add'], function () {
+    Route::get('/add', function () {
+        return view('newContact');
+    });
+
+    Route::get('/contact', function () {
+        return view('newContact');
+    });
+
+    Route::get('/hotel', function () {
+        return view('newHotel');
+    });
+});
+
+
 
 Route::group(['prefix' => 'api/v1'], function () {
     Route::get('/contact', function(){
@@ -25,8 +40,15 @@ Route::group(['prefix' => 'api/v1'], function () {
     });
 
     Route::get('/hotel', function(){
-        return $contacts=App\Hotel::all();
+        return $hotels=App\Hotel::all();
     });
+
+    Route::post('/hotel', 'HotelController@store');
+    Route::post('/hotel/edit', 'HotelController@update');
+    Route::delete('/hotel/{id}', 'HotelController@destroy');
+
+    Route::post('/contact', 'ContactController@store');
+
 });
 
 Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function()

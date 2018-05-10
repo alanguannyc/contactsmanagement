@@ -19,8 +19,8 @@ class CreateContactsTable extends Migration
             $table->string('name');
             $table->string('position');
             $table->string('title');
-            $table->string('email')->nullable;
-            $table->string('phone')->nullable;
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

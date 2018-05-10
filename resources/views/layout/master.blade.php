@@ -101,7 +101,7 @@
           @yield('content')
           
         </div>
-        
+      </div>
         <!-- /page content -->
 
         <!-- footer content -->
