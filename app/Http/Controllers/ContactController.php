@@ -16,4 +16,15 @@ class ContactController extends Controller
             new Contact(request(['name','position','title','email','phone']))
         );
     }
+
+    public function update(Request $request) {
+        $contact = Contact::findOrFail($request->id);
+        $contact = $hotel->update($request->all());
+    }
+
+    public function destroy($id) {
+        $contact= Contact::find($id);
+        $contact->delete();
+        return $contact;
+    }
 }

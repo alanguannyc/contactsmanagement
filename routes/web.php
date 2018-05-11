@@ -48,6 +48,8 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::delete('/hotel/{id}', 'HotelController@destroy');
 
     Route::post('/contact', 'ContactController@store');
+    Route::post('/contact/edit', 'ContactController@update');
+    Route::delete('/contact/{id}', 'ContactController@destroy');
 
 });
 

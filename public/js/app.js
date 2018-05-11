@@ -13898,66 +13898,28 @@ var app = new Vue({
     el: '#app'
 });
 
-// datatable format
-function format(d) {
-    if (d.profile == null) {
-        d.profile = "Not set";
-    }
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.name + '</td>' + '</tr>' + '<tr>' + '<td>Email:</td>' + '<td>' + d.email + '</td>' + '</tr>' + '<tr>' + '<td>Company:</td>' + '<td>' + d.hotel.name + '</td>' + '</tr>' + '<tr>' + '<td>Position:</td>' + '<td>' + d.position + '</td>' + '</tr>' + '<tr>' + '<td>Title:</td>' + '<td>' + d.title + '</td>' + '</tr>' + '<tr>' + '<td>Phone:</td>' + '<td>' + d.phone + '</td>' + '</tr>' + '<tr>' + '<td>Address:</td>' + '<td>' + d.hotel.address + '</td>' + '</tr>' + '</table>';
+//update data function
+function updateData(url, uid) {
+    var newData = {};
+    newData.id = uid;
+    $('body').find("#edit_body input").each(function () {
+
+        var key = $(this).attr('name');
+        var val = $(this).val();
+
+        newData[key] = val;
+    });
+
+    axios.post(url, newData).then(function (res) {
+        // $('body').load(window.location.href + "#hotel_table");
+
+    });
 }
 
-//get contact list
-axios.get('../api/v1/contact').then(function (res) {
-    var newdata = res.data;
-    $(document).ready(function () {
-        var table = $('#user_table').DataTable({
-            stateSave: true,
-            data: newdata,
-            columns: [{
-                "className": 'details-control',
-                "orderable": false,
-                "data": null,
-                "defaultContent": 'view'
-            }, { data: 'name' }, { data: 'email' }, { data: 'hotel.name' }, { data: 'position' }, { data: 'title' }, { data: 'phone',
-                "defaultContent": "<i>Not set</i>" }, { data: 'created_at' }],
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf']
-
-        });
-
-        $('#user_table tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            } else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-                var data = table.row(this).data();
-
-                $('#modal_btn').click(function () {
-                    $('#exampleModalLong .modal-title').html(data.name);
-                });
-            }
-        });
-
-        $('#user_table tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-            }
-        });
-    });
-}).catch(function (err) {
-    console.log(err);
-});
+//delete data function
+function deleteData(url, $id) {
+    axios.delete(url, $id).then(function (res) {});
+}
 
 //auto complete function
 function autocomplete(inp, arr) {
@@ -14063,28 +14025,98 @@ function autocomplete(inp, arr) {
     });
 }
 
-//update data function
-function updateData(url, uid) {
-    var newData = {};
-    newData.id = uid;
-    $('body').find("#edit_body input").each(function () {
-
-        var key = $(this).attr('name');
-        var val = $(this).val();
-
-        newData[key] = val;
-    });
-
-    axios.post(url, newData).then(function (res) {
-        // $('body').load(window.location.href + "#hotel_table");
-
-    });
+// datatable format
+function format(d) {
+    if (d.profile == null) {
+        d.profile = "Not set";
+    }
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.name + '</td>' + '</tr>' + '<tr>' + '<td>Email:</td>' + '<td>' + d.email + '</td>' + '</tr>' + '<tr>' + '<td>Company:</td>' + '<td>' + d.hotel.name + '</td>' + '</tr>' + '<tr>' + '<td>Position:</td>' + '<td>' + d.position + '</td>' + '</tr>' + '<tr>' + '<td>Title:</td>' + '<td>' + d.title + '</td>' + '</tr>' + '<tr>' + '<td>Phone:</td>' + '<td>' + d.phone + '</td>' + '</tr>' + '<tr>' + '<td>Address:</td>' + '<td>' + d.hotel.address + '</td>' + '</tr>' + '</table>';
 }
 
-//delete data function
-function deleteData(url, $id) {
-    axios.delete(url, $id).then(function (res) {});
-}
+/* 
+Perform contact crud
+*/
+//get contact list
+axios.get('../api/v1/contact').then(function (res) {
+    var newdata = res.data;
+    $(document).ready(function () {
+        var table = $('#user_table').DataTable({
+            stateSave: true,
+            data: newdata,
+            columns: [{
+                "className": 'details-control',
+                "orderable": false,
+                "data": null,
+                "defaultContent": 'view'
+            }, { data: 'name' }, { data: 'email' }, { data: 'hotel.name',
+                "defaultContent": "<i>Not set</i>" }, { data: 'position' }, { data: 'title' }, { data: 'phone',
+                "defaultContent": "<i>Not set</i>" }, { data: 'created_at' }],
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf']
+
+        });
+
+        $('#user_table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                var data = table.row(this).data();
+                var uid = table.row(this).data().id;
+
+                //contact edit
+                $('#modal_btn').click(function () {
+
+                    $('#exampleModalLong .modal-title').html(data.name);
+
+                    $('#exampleModalLong').find("form input").each(function () {
+
+                        var name = $(this).attr('name');
+                        var name = name.replace('contact', '').toLowerCase();
+                        var element_id = $(this).attr('id');
+
+                        for (var key in data) {
+                            if (key == name) {
+                                $('#hotel').val(data.hotel.name);
+                                $('#' + element_id).val(data[key]);
+                            }
+                        }
+                    });
+
+                    $('form #btn_edit_contact').click(function () {
+                        updateData('api/v1/contact/edit', uid);
+                    });
+                });
+
+                //delete contact
+                $('#contact_delete_btn').click(function () {
+                    if (confirm("Want to delete?")) {
+                        deleteData('api/v1/contact/' + uid, uid);
+                    }
+                });
+            }
+        });
+
+        $('#user_table tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+            }
+        });
+    });
+}).catch(function (err) {
+    console.log(err);
+});
 
 //autocomplete hotel input
 axios.get('../api/v1/hotel').then(function (res) {
@@ -14095,9 +14127,24 @@ axios.get('../api/v1/hotel').then(function (res) {
     });
 
     autocomplete(document.getElementById("hotelName"), hotels);
+}).then().catch(function (err) {
+    console.log(err);
+});
+
+//autocomplete hotel input
+axios.get('../api/v1/hotel').then(function (res) {
+    var newdata = res.data;
+
+    var hotels = newdata.map(function (a) {
+        return a.name;
+    });
+
+    autocomplete(document.getElementById("hotel"), hotels);
 }).catch(function (err) {
     console.log(err);
 });
+
+/* Perform Hotel CRUD */
 
 //get hotel list
 
@@ -14106,8 +14153,8 @@ axios.get('../api/v1/hotel').then(function (res) {
     $(document).ready(function () {
         var table = $('#hotel_table').DataTable({
             "processing": true,
-            "serverSide": true,
-            "ajax": { "url": "api/v1/hotel", "dataSrc": "" },
+            // "serverSide": true,
+            // "ajax":{"url":"api/v1/hotel","dataSrc":""},
             data: newdata,
             columns: [{
                 "className": 'details-control',
@@ -14146,11 +14193,12 @@ axios.get('../api/v1/hotel').then(function (res) {
 
                 //hotel delete
                 $('#hotel_delete_btn').click(function () {
-
-                    deleteData('api/v1/hotel/' + uid, uid);
+                    if (confirm("Want to delete?")) {
+                        deleteData('api/v1/hotel/' + uid, uid);
+                    }
 
                     table.$('tr.selected').removeClass('selected');
-                    table.draw();
+                    table.ajax.reload();
                 });
             }
         });

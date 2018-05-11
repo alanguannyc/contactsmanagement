@@ -21,8 +21,128 @@ const app = new Vue({
     el: '#app'
 });
 
+//update data function
+function updateData(url, uid) {
+    var newData = {};
+    newData.id = uid;
+    $('body').find("#edit_body input").each(function(){
+        
+    var key = $(this).attr('name');
+    var val = $(this).val();
 
+    newData[key] = val;
+    });
+    
+    axios.post(url, newData).then(res => {
+        // $('body').load(window.location.href + "#hotel_table");
+        
+    })
+}
 
+//delete data function
+function deleteData(url, $id) {
+    axios.delete(url, $id).then(res => {
+
+    })
+}
+
+//auto complete function
+function autocomplete(inp, arr) {
+    /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function(e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+          /*check if the item starts with the same letters as the text field value:*/
+          if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].substr(val.length);
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+            /*execute a function when someone clicks on the item value (DIV element):*/
+                b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+            a.appendChild(b);
+          }
+        }
+    });
+    /*execute a function presses a key on the keyboard:*/
+    inp.addEventListener("keydown", function(e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+          }
+        }
+    });
+    function addActive(x) {
+      /*a function to classify an item as "active":*/
+      if (!x) return false;
+      /*start by removing the "active" class on all items:*/
+      removeActive(x);
+      if (currentFocus >= x.length) currentFocus = 0;
+      if (currentFocus < 0) currentFocus = (x.length - 1);
+      /*add class "autocomplete-active":*/
+      x[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(x) {
+      /*a function to remove the "active" class from all autocomplete items:*/
+      for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+      }
+    }
+    function closeAllLists(elmnt) {
+      /*close all autocomplete lists in the document,
+      except the one passed as an argument:*/
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+  }
 
 // datatable format
 function format ( d ) {
@@ -62,7 +182,9 @@ function format ( d ) {
         
     }
     
-
+/* 
+Perform contact crud
+*/
 //get contact list
     axios.get('../api/v1/contact')
         .then(res=>{
@@ -81,7 +203,8 @@ function format ( d ) {
                             },
                             { data: 'name' },
                             { data: 'email' },
-                            { data: 'hotel.name'},
+                            { data: 'hotel.name',
+                            "defaultContent": "<i>Not set</i>" },
                             { data: 'position' },
                             { data: 'title'},
                             { data: 'phone',
@@ -104,9 +227,45 @@ function format ( d ) {
                         table.$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                         var data = table.row( this ).data();
-                        
+                        var uid = table.row( this ).data().id;
+
+                            //contact edit
                             $('#modal_btn').click(function(){
-                                $('#exampleModalLong .modal-title').html(data.name)});
+                                
+                                $('#exampleModalLong .modal-title').html(data.name);
+
+                                $('#exampleModalLong').find("form input").each(function(){
+                                    
+                                    var name = $(this).attr('name');
+                                    var name = name.replace('contact','').toLowerCase();
+                                    var element_id = $(this).attr('id');
+                                    
+                                    for (var key in data) {
+                                        if (key == name) {
+                                            $('#hotel').val(data.hotel.name)
+                                            $('#'+element_id).val(data[key])
+                                        }
+                                    }
+                                   
+                                    
+
+                                    });
+                                   
+                                    $('form #btn_edit_contact').click(function(){         
+                                        updateData('api/v1/contact/edit', uid);
+                                        
+                                    
+                                    })
+                                
+                            });
+
+                            //delete contact
+                            $('#contact_delete_btn').click(function(){
+                                if(confirm("Want to delete?")) {
+                                    deleteData(`api/v1/contact/${uid}`, uid);
+                                }
+                                
+                            })
                     }
                 } );
 
@@ -135,128 +294,9 @@ function format ( d ) {
             console.log(err);
         });
 
-    //auto complete function
-        function autocomplete(inp, arr) {
-            /*the autocomplete function takes two arguments,
-            the text field element and an array of possible autocompleted values:*/
-            var currentFocus;
-            /*execute a function when someone writes in the text field:*/
-            inp.addEventListener("input", function(e) {
-                var a, b, i, val = this.value;
-                /*close any already open lists of autocompleted values*/
-                closeAllLists();
-                if (!val) { return false;}
-                currentFocus = -1;
-                /*create a DIV element that will contain the items (values):*/
-                a = document.createElement("DIV");
-                a.setAttribute("id", this.id + "autocomplete-list");
-                a.setAttribute("class", "autocomplete-items");
-                /*append the DIV element as a child of the autocomplete container:*/
-                this.parentNode.appendChild(a);
-                /*for each item in the array...*/
-                for (i = 0; i < arr.length; i++) {
-                  /*check if the item starts with the same letters as the text field value:*/
-                  if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                    /*create a DIV element for each matching element:*/
-                    b = document.createElement("DIV");
-                    /*make the matching letters bold:*/
-                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                    b.innerHTML += arr[i].substr(val.length);
-                    /*insert a input field that will hold the current array item's value:*/
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                    /*execute a function when someone clicks on the item value (DIV element):*/
-                        b.addEventListener("click", function(e) {
-                        /*insert the value for the autocomplete text field:*/
-                        inp.value = this.getElementsByTagName("input")[0].value;
-                        /*close the list of autocompleted values,
-                        (or any other open lists of autocompleted values:*/
-                        closeAllLists();
-                    });
-                    a.appendChild(b);
-                  }
-                }
-            });
-            /*execute a function presses a key on the keyboard:*/
-            inp.addEventListener("keydown", function(e) {
-                var x = document.getElementById(this.id + "autocomplete-list");
-                if (x) x = x.getElementsByTagName("div");
-                if (e.keyCode == 40) {
-                  /*If the arrow DOWN key is pressed,
-                  increase the currentFocus variable:*/
-                  currentFocus++;
-                  /*and and make the current item more visible:*/
-                  addActive(x);
-                } else if (e.keyCode == 38) { //up
-                  /*If the arrow UP key is pressed,
-                  decrease the currentFocus variable:*/
-                  currentFocus--;
-                  /*and and make the current item more visible:*/
-                  addActive(x);
-                } else if (e.keyCode == 13) {
-                  /*If the ENTER key is pressed, prevent the form from being submitted,*/
-                  e.preventDefault();
-                  if (currentFocus > -1) {
-                    /*and simulate a click on the "active" item:*/
-                    if (x) x[currentFocus].click();
-                  }
-                }
-            });
-            function addActive(x) {
-              /*a function to classify an item as "active":*/
-              if (!x) return false;
-              /*start by removing the "active" class on all items:*/
-              removeActive(x);
-              if (currentFocus >= x.length) currentFocus = 0;
-              if (currentFocus < 0) currentFocus = (x.length - 1);
-              /*add class "autocomplete-active":*/
-              x[currentFocus].classList.add("autocomplete-active");
-            }
-            function removeActive(x) {
-              /*a function to remove the "active" class from all autocomplete items:*/
-              for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("autocomplete-active");
-              }
-            }
-            function closeAllLists(elmnt) {
-              /*close all autocomplete lists in the document,
-              except the one passed as an argument:*/
-              var x = document.getElementsByClassName("autocomplete-items");
-              for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
-                x[i].parentNode.removeChild(x[i]);
-              }
-            }
-          }
-          /*execute a function when someone clicks in the document:*/
-          document.addEventListener("click", function (e) {
-              closeAllLists(e.target);
-          });
-          }
+    
 
-        //update data function
-        function updateData(url, uid) {
-            var newData = {};
-            newData.id = uid;
-            $('body').find("#edit_body input").each(function(){
-                
-            var key = $(this).attr('name');
-            var val = $(this).val();
         
-            newData[key] = val;
-            });
-            
-            axios.post(url, newData).then(res => {
-                // $('body').load(window.location.href + "#hotel_table");
-                
-            })
-        }
-
-        //delete data function
-        function deleteData(url, $id) {
-            axios.delete(url, $id).then(res => {
-
-            })
-        }
 
         //autocomplete hotel input
         axios.get('../api/v1/hotel')
@@ -266,11 +306,29 @@ function format ( d ) {
             var hotels = newdata.map(a => a.name);
             
             autocomplete(document.getElementById("hotelName"), hotels);
+            
+        }).then(
+            
+        )
+        .catch(function(err){
+            console.log(err);
+        });
+
+        //autocomplete hotel input
+        axios.get('../api/v1/hotel')
+        .then(res=>{
+            var newdata = res.data;
+            
+            var hotels = newdata.map(a => a.name);
+            
+            autocomplete(document.getElementById("hotel"), hotels);
+            
         })
         .catch(function(err){
             console.log(err);
         });
      
+/* Perform Hotel CRUD */
 
         //get hotel list
 
@@ -281,8 +339,8 @@ function format ( d ) {
               var table = $('#hotel_table').DataTable(
                     {
                         "processing": true,
-                        "serverSide": true,
-                        "ajax":{"url":"api/v1/hotel","dataSrc":""},
+                        // "serverSide": true,
+                        // "ajax":{"url":"api/v1/hotel","dataSrc":""},
                         data:newdata,
                         columns: [
                             {
@@ -332,11 +390,13 @@ function format ( d ) {
 
                         //hotel delete
                             $('#hotel_delete_btn').click(function(){
+                                if(confirm("Want to delete?")) {
+                                    deleteData(`api/v1/hotel/${uid}`, uid);
+                                }
                                 
-                                deleteData(`api/v1/hotel/${uid}`, uid);
                                 
                                 table.$('tr.selected').removeClass('selected');
-                                table.draw();
+                                table.ajax.reload();
                             })
             
 
