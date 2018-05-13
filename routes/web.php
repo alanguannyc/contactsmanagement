@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use Carbon\Carbon;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,7 +34,7 @@ Route::group(['prefix' => 'add'], function () {
 
 
 
-Route::group(['prefix' => 'api/v1'], function () {
+Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], function () {
     Route::get('/contact', function(){
         return $contacts=\App\Contact::with('hotel')->get();
     });
@@ -56,6 +56,7 @@ Route::group(['prefix' => 'api/v1'], function () {
 Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function()
 {
     Route::get('/', function() {
+        
         return view('index');
     })->name('index');
 
@@ -68,3 +69,4 @@ Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function(
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');

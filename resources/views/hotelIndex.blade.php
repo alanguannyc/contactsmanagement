@@ -34,7 +34,7 @@
                             <label for="exampleFormControlInput1">address</label>
                             <input type="text" class="form-control" id="hotelAddress" name="address" placeholder="Enter address" >
                         </div>
-                            <button type="button" id="btn_edit_hotel"  class="btn btn-primary">Edit</button>
+                            <button type="button" id="btn_edit_hotel" data-dismiss="modal"  class="btn btn-primary">Edit</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </form>
             </div>

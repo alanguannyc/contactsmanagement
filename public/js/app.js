@@ -13910,10 +13910,7 @@ function updateData(url, uid) {
         newData[key] = val;
     });
 
-    axios.post(url, newData).then(function (res) {
-        // $('body').load(window.location.href + "#hotel_table");
-
-    });
+    axios.post(url, newData).then(function (res) {});
 }
 
 //delete data function
@@ -14033,6 +14030,12 @@ function format(d) {
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.name + '</td>' + '</tr>' + '<tr>' + '<td>Email:</td>' + '<td>' + d.email + '</td>' + '</tr>' + '<tr>' + '<td>Company:</td>' + '<td>' + d.hotel.name + '</td>' + '</tr>' + '<tr>' + '<td>Position:</td>' + '<td>' + d.position + '</td>' + '</tr>' + '<tr>' + '<td>Title:</td>' + '<td>' + d.title + '</td>' + '</tr>' + '<tr>' + '<td>Phone:</td>' + '<td>' + d.phone + '</td>' + '</tr>' + '<tr>' + '<td>Address:</td>' + '<td>' + d.hotel.address + '</td>' + '</tr>' + '</table>';
 }
 
+function formatHotel(d) {
+    if (d.profile == null) {
+        d.profile = "Not set";
+    }
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.name + '</td>' + '</tr>' + '<tr>' + '<td>Address:</td>' + '<td>' + d.address + '</td>' + '</tr>' + '</table>';
+}
 /* 
 Perform contact crud
 */
@@ -14067,10 +14070,9 @@ axios.get('../api/v1/contact').then(function (res) {
 
                 //contact edit
                 $('#modal_btn').click(function () {
+                    $('#contactPosition').val(data.position);
 
-                    $('#exampleModalLong .modal-title').html(data.name);
-
-                    $('#exampleModalLong').find("form input").each(function () {
+                    $('body').find("form input").each(function () {
 
                         var name = $(this).attr('name');
                         var name = name.replace('contact', '').toLowerCase();
@@ -14078,14 +14080,54 @@ axios.get('../api/v1/contact').then(function (res) {
 
                         for (var key in data) {
                             if (key == name) {
-                                $('#hotel').val(data.hotel.name);
+                                if (data.hotel == "") {
+                                    $('#hotel').val("");
+                                } else if (data.hotel !== null) {
+                                    $('#hotel').val(data.hotel.name);
+                                }
                                 $('#' + element_id).val(data[key]);
                             }
                         }
                     });
 
-                    $('form #btn_edit_contact').click(function () {
-                        updateData('api/v1/contact/edit', uid);
+                    $('#exampleModalLong .modal-title').html(data.name);
+
+                    $('form').on('click', '#btn_edit_contact', function (e) {
+                        e.preventDefault();
+                        var newHotel = {};
+                        newHotel.name = $('#hotel').val();
+                        newHotel.address = "";
+                        if (true) {
+                            if (data.hotel == null || newHotel.name !== data.hotel.name) {
+                                axios.post('../api/v1/hotel', newHotel).then(function (res) {
+                                    var contact = {};
+                                    contact.hotel_id = res.data.id;
+
+                                    contact.name = $('#contactName').val();
+                                    contact.position = $('#contactPosition').val();
+                                    contact.title = $('#contactTitle').val();
+                                    contact.email = $('#contactEmail').val();
+                                    contact.phone = $('#contactPhone').val();
+
+                                    axios.post('../api/v1/contact', contact).then(function (res) {
+                                        deleteData('api/v1/contact/' + uid, uid);
+
+                                        $('body').load(window.location.href);
+                                    });
+                                });
+                            } else {
+
+                                var contact = {};
+                                contact.hotel_id = data.hotel.id;
+                                contact.name = $('#contactName').val();
+                                contact.position = $('#contactPosition').val();
+                                contact.title = $('#contactTitle').val();
+                                contact.email = $('#contactEmail').val();
+                                contact.phone = $('#contactPhone').val();
+                                contact.id = data.id;
+                                axios.post('api/v1/contact/edit', contact).then(function (res) {});
+                            }
+                        }
                     });
                 });
 
@@ -14093,6 +14135,7 @@ axios.get('../api/v1/contact').then(function (res) {
                 $('#contact_delete_btn').click(function () {
                     if (confirm("Want to delete?")) {
                         deleteData('api/v1/contact/' + uid, uid);
+                        $('body').load(window.location.href + "#hotel_table");
                     }
                 });
             }
@@ -14161,7 +14204,13 @@ axios.get('../api/v1/hotel').then(function (res) {
                 "orderable": false,
                 "data": null,
                 "defaultContent": 'view'
-            }, { data: 'name' }, { data: 'address',
+            }, { data: 'name'
+                // fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                //     if(oData.name) {
+                //         $(nTd).html("<a href='/hotel/"+oData.id+"'>"+oData.name+"</a>");
+                //     }
+                // } 
+            }, { data: 'address',
                 "defaultContent": "<i>Not set</i>" }, { data: 'created_at' }],
             dom: 'Bfrtip',
             buttons: ['copy', 'csv', 'excel', 'pdf']
@@ -14177,7 +14226,7 @@ axios.get('../api/v1/hotel').then(function (res) {
                 var data = table.row(this).data();
                 var name = data.name;
                 var address = data.address;
-                var uid = table.row(this).data().id;
+                var uid = data.id;
 
                 //hotel edit
                 $('#modal_btn').click(function () {
@@ -14187,7 +14236,6 @@ axios.get('../api/v1/hotel').then(function (res) {
                     $('form #hotelAddress').val(address);
                     $('form #btn_edit_hotel').click(function () {
                         updateData('api/v1/hotel/edit', uid);
-                        table.draw();
                     });
                 });
 
@@ -14196,9 +14244,7 @@ axios.get('../api/v1/hotel').then(function (res) {
                     if (confirm("Want to delete?")) {
                         deleteData('api/v1/hotel/' + uid, uid);
                     }
-
-                    table.$('tr.selected').removeClass('selected');
-                    table.ajax.reload();
+                    $('body').load(window.location.href);
                 });
             }
         });
@@ -14214,7 +14260,7 @@ axios.get('../api/v1/hotel').then(function (res) {
                 tr.removeClass('shown');
             } else {
                 // Open this row
-                row.child(format(row.data())).show();
+                row.child(formatHotel(row.data())).show();
                 tr.addClass('shown');
             }
         });
@@ -14223,14 +14269,38 @@ axios.get('../api/v1/hotel').then(function (res) {
     console.log(err);
 });
 
+//show error message
+
+function showError(data) {
+    jQuery.each(data.errors, function (key, value) {
+        jQuery('.alert-danger').show();
+        jQuery('.alert-danger').append('<p>' + value + '</p>');
+    });
+}
+
+//show success message
+
+function showSucess(msg) {
+    jQuery('.alert-success').show();
+    jQuery('.alert-success').append('<p>' + msg + '</p>');
+}
+
 //ajax new hotel/contact form
 $(document).ready(function () {
     $('form').on('click', '#btn_hotel', function (e) {
         e.preventDefault();
         var newHotel = {};
+
         newHotel.name = $('#hotelName').val();
         newHotel.address = $('#hotelAddress').val();
-        axios.post('../api/v1/hotel', newHotel).then(function (res) {});
+        axios.post('/api/v1/hotel', newHotel).then(function (res) {
+            // location.reload();
+            $('#hotelName').val('');
+            $('#hotelAddress').val('');
+            showSucess('Your hotel has been added!');
+        }).catch(function (error) {
+            showError(error.response.data);
+        });
     });
 
     $('form').on('click', '#btn_add', function (e) {
@@ -14249,8 +14319,19 @@ $(document).ready(function () {
             contact.phone = $('#contactPhone').val();
 
             axios.post('../api/v1/contact', contact).then(function (res) {
-                console.log(res);
+                // document.getElementById("#new_contact").reset()
+                $('#contactName').val('');
+                $('#contactPosition').val('');
+                $('#contactTitle').val('');
+                $('#contactEmail').val('');
+                $('#contactPhone').val('');
+                showSucess('Your contact has been added!');
+            }).catch(function (error) {
+                console.log(error.response);
+                showError(error.response.data);
             });
+        }).catch(function (error) {
+            showError(error.response.data);
         });
     });
 });

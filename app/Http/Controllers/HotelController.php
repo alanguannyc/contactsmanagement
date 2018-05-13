@@ -23,13 +23,17 @@ class HotelController extends Controller
             $hotel=Hotel::updateOrCreate(['name'=>$hotel_name, 'address'=>$hotel_address]);
         }
         // $hotel=Hotel::create(request(['name','address']));
+        // session()->flash('message','Your hotel has been added!');
         return $hotel;
+
+        
         // return redirect('/admin');
     }
 
     public function update(Request $request) {
         $hotel = Hotel::findOrFail($request->id);
         $hotel = $hotel->update($request->all());
+        session()->flash('message','Your hotel information has been udpated!');
     }
 
     public function destroy($id) {

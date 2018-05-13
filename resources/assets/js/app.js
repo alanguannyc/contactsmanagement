@@ -34,7 +34,7 @@ function updateData(url, uid) {
     });
     
     axios.post(url, newData).then(res => {
-        // $('body').load(window.location.href + "#hotel_table");
+       
         
     })
 }
@@ -42,6 +42,7 @@ function updateData(url, uid) {
 //delete data function
 function deleteData(url, $id) {
     axios.delete(url, $id).then(res => {
+        
 
     })
 }
@@ -182,6 +183,22 @@ function format ( d ) {
         
     }
     
+    function formatHotel ( d ) {
+        if(d.profile==null) {
+            d.profile="Not set" }
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                    '<tr>'+
+                        '<td>Full name:</td>'+
+                        '<td>'+d.name+'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td>Address:</td>'+
+                        '<td>'+d.address+'</td>'+
+                    '</tr>'+
+                '</table>';
+        
+            
+        }
 /* 
 Perform contact crud
 */
@@ -231,10 +248,9 @@ Perform contact crud
 
                             //contact edit
                             $('#modal_btn').click(function(){
-                                
-                                $('#exampleModalLong .modal-title').html(data.name);
+                                $('#contactPosition').val(data.position)
 
-                                $('#exampleModalLong').find("form input").each(function(){
+                                $('body').find("form input").each(function(){
                                     
                                     var name = $(this).attr('name');
                                     var name = name.replace('contact','').toLowerCase();
@@ -242,20 +258,70 @@ Perform contact crud
                                     
                                     for (var key in data) {
                                         if (key == name) {
-                                            $('#hotel').val(data.hotel.name)
+                                            if(data.hotel==""){
+                                                $('#hotel').val("")
+                                                
+                                            } else if (data.hotel !== null){
+                                                $('#hotel').val(data.hotel.name)
+                                            }
                                             $('#'+element_id).val(data[key])
                                         }
                                     }
-                                   
-                                    
-
                                     });
-                                   
-                                    $('form #btn_edit_contact').click(function(){         
-                                        updateData('api/v1/contact/edit', uid);
-                                        
+
+                                $('#exampleModalLong .modal-title').html(data.name);
+
+                                $('form').on('click','#btn_edit_contact', function(e){
+                                    e.preventDefault();
+                                    var newHotel={};
+                                    newHotel.name = $('#hotel').val();
+                                    newHotel.address = "";
+                                    if (true) {
+                                        if(data.hotel == null || newHotel.name !== data.hotel.name) {
+                                            axios.post('../api/v1/hotel', newHotel)
+                                            .then(res=>{
+                                                var contact = {};
+                                                contact.hotel_id=res.data.id;
+                                                
+                                                contact.name = $('#contactName').val();
+                                                contact.position = $('#contactPosition').val();
+                                                contact.title = $('#contactTitle').val();
+                                                contact.email =$('#contactEmail').val();
+                                                contact.phone =$('#contactPhone').val();
+                                                
+                                                axios.post('../api/v1/contact', contact)
+                                                .then(res => {
+                                                    deleteData(`api/v1/contact/${uid}`, uid)
+                                               
+                                                $('body').load(window.location.href);
+                                                })
+                                            })
+                                        } else {
+    
+                                            var contact = {};
+                                                contact.hotel_id=data.hotel.id;
+                                                contact.name = $('#contactName').val();
+                                                contact.position = $('#contactPosition').val();
+                                                contact.title = $('#contactTitle').val();
+                                                contact.email =$('#contactEmail').val();
+                                                contact.phone =$('#contactPhone').val();
+                                                contact.id = data.id;
+                                                axios.post('api/v1/contact/edit', contact)
+                                                .then(res => {
+    
+                                                })
+                                        }
+                                    }
                                     
-                                    })
+                                    
+                                })
+
+
+
+
+
+                                
+                                   
                                 
                             });
 
@@ -263,6 +329,7 @@ Perform contact crud
                             $('#contact_delete_btn').click(function(){
                                 if(confirm("Want to delete?")) {
                                     deleteData(`api/v1/contact/${uid}`, uid);
+                                    $('body').load(window.location.href + "#hotel_table");
                                 }
                                 
                             })
@@ -349,7 +416,13 @@ Perform contact crud
                                 "data":           null,
                                 "defaultContent": 'view'
                             },
-                            { data: 'name' },
+                            { data: 'name',
+                            // fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            //     if(oData.name) {
+                            //         $(nTd).html("<a href='/hotel/"+oData.id+"'>"+oData.name+"</a>");
+                            //     }
+                            // } 
+                        },
                             { data: 'address',
                             "defaultContent": "<i>Not set</i>"  },
                             { data: 'created_at'},
@@ -373,7 +446,7 @@ Perform contact crud
                         var data = table.row( this ).data();
                         var name = data.name;
                         var address = data.address;
-                        var uid = table.row( this ).data().id;
+                        var uid = data.id;
                         
                         //hotel edit
                             $('#modal_btn').click(function(){
@@ -383,7 +456,7 @@ Perform contact crud
                                 $('form #hotelAddress').val(address);
                                 $('form #btn_edit_hotel').click(function(){         
                                     updateData('api/v1/hotel/edit', uid);
-                                    table.draw();
+                                    
                                 })
                                 
                             });
@@ -393,10 +466,7 @@ Perform contact crud
                                 if(confirm("Want to delete?")) {
                                     deleteData(`api/v1/hotel/${uid}`, uid);
                                 }
-                                
-                                
-                                table.$('tr.selected').removeClass('selected');
-                                table.ajax.reload();
+                                $('body').load(window.location.href);
                             })
             
 
@@ -418,11 +488,10 @@ Perform contact crud
                     }
                     else {
                         // Open this row
-                        row.child( format(row.data()) ).show();
+                        row.child( formatHotel(row.data()) ).show();
                         tr.addClass('shown');
                     }
                 } );
-
             } );
     
             
@@ -431,17 +500,39 @@ Perform contact crud
             console.log(err);
         });
 
+//show error message
+
+function showError(data){
+    jQuery.each(data.errors, function(key, value){
+        jQuery('.alert-danger').show();
+        jQuery('.alert-danger').append('<p>'+value+'</p>');
+})}
+
+//show success message
+
+function showSucess(msg){
+        jQuery('.alert-success').show();
+        jQuery('.alert-success').append('<p>'+msg+'</p>');
+}
+
+
         //ajax new hotel/contact form
         $(document).ready(function(){
             $('form').on('click', '#btn_hotel', function(e){
                 e.preventDefault();
                 var newHotel={};
+                 
                 newHotel.name = $('#hotelName').val();
                 newHotel.address = $('#hotelAddress').val();
-                axios.post('../api/v1/hotel', newHotel)
+                axios.post('/api/v1/hotel', newHotel)
                 .then(res=>{
-
-                })
+                    // location.reload();
+                    $('#hotelName').val('');
+                    $('#hotelAddress').val('');
+                    showSucess('Your hotel has been added!')
+                }).catch(function (error) {
+                    showError(error.response.data)
+                  })
             })
 
 
@@ -463,9 +554,20 @@ Perform contact crud
                     
                     axios.post('../api/v1/contact', contact)
                     .then(res => {
-                        console.log(res)
-                    })
-                })
+                        // document.getElementById("#new_contact").reset()
+                    $('#contactName').val('');
+                    $('#contactPosition').val('');
+                    $('#contactTitle').val('');
+                    $('#contactEmail').val('');
+                    $('#contactPhone').val('');
+                    showSucess('Your contact has been added!')
+                    }).catch(function (error) {
+                        console.log(error.response)
+                        showError(error.response.data)
+                      })
+                }).catch(function (error) {
+                    showError(error.response.data)
+                  })
             })
         });
 

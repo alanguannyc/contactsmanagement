@@ -68,7 +68,7 @@
                                         <label for="contactPhone">Phone Number</label>
                                         <input type="text" class="form-control" id="contactPhone" name="contactPhone" placeholder="Enter Phone Number">
                                         </div>
-                                    <button type="button" id="btn_edit_contact"  class="btn btn-primary">Edit</button>
+                                    <button type="button" id="btn_edit_contact" data-dismiss="modal" class="btn btn-primary">Edit</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </form>
                     </div>

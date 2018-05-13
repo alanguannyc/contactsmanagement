@@ -1,10 +1,11 @@
 @extends('layout.master')
 
 @section('content')
-<form autocomplete="off">
+<div class="alert alert-danger" style="display:none"></div>
+<form autocomplete="off" id="new_contact">
         <div class="form-group autocomplete">
                 <label for="HotelInput">Hotel</label>
-                <input type="text" class="form-control" id="hotel" name="hotel" placeholder="" required>
+                <input type="text" class="form-control" id="hotel" name="hotel" placeholder="Enter Hotel" required>
                 </div>
         <div class="form-group">
     <div class="form-group">
@@ -13,7 +14,7 @@
             </div>
     <div class="form-group">
       <label for="contactEmail">Email address</label>
-      <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com">
+      <input type="email" class="form-control" id="contactEmail" placeholder="name@example.com" required>
     </div>
     <div class="form-group">
       <label for="contactPosition">Position</label>
@@ -40,7 +41,7 @@
     </div>
     <div class="form-group">
             <label for="contactTitle">Title</label>
-            <input type="text" class="form-control" id="contactTitle" name="contactTitle" placeholder="Enter Position Title">
+            <input type="text" class="form-control" id="contactTitle" name="contactTitle" required placeholder="Enter Position Title">
             </div>
     <div class="form-group">
             <label for="contactPhone">Phone Number</label>

@@ -2,7 +2,9 @@
 
 @section('content')
 
-<form autocomplete="off" action="/api/v1/hotel" method="POST">
+<div class="alert alert-danger" style="display:none"></div>
+<div class="alert alert-success" style="display:none"></div>
+<form autocomplete="off"  method="POST">
     @csrf
         <div class="form-group autocomplete">
                 <label for="exampleFormControlInput1">Hotel</label>

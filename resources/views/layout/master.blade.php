@@ -47,7 +47,7 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentelella Alela!</span></a>
+              <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Hotel Association of New York City</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -65,15 +65,19 @@
             <!-- /menu profile quick info -->
 
             <br />
-
+            <div class="alert alert-success" style="display:none"></div>
             <!-- sidebar menu -->
             @include('layout.sidebar')
             <!-- /sidebar menu -->
-
+                @if ($flash = session('message'))
+                <div id="flash-message" class="alert alert-success" role="alert">
+                  {{ $flash }}
+                </div>
+                @endif
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
               <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                <span class="glyphicon " aria-hidden="true"></span>
               </a>
               <a data-toggle="tooltip" data-placement="top" title="FullScreen">
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
@@ -81,7 +85,7 @@
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
               </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="/logout">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
@@ -97,6 +101,8 @@
         <div class="right_col" role="main">
           <!-- top tiles -->
           @include('layout.header')
+          
+          @include('layout.errors')
           <!-- /top tiles -->
           @yield('content')
           
