@@ -14067,7 +14067,7 @@ axios.get('../api/v1/contact').then(function (res) {
                 $(this).addClass('selected');
                 var data = table.row(this).data();
                 var uid = table.row(this).data().id;
-
+                console.log(data.position);
                 //contact edit
                 $('#modal_btn').click(function () {
                     $('#contactPosition').val(data.position);
@@ -14112,7 +14112,7 @@ axios.get('../api/v1/contact').then(function (res) {
                                     axios.post('../api/v1/contact', contact).then(function (res) {
                                         deleteData('api/v1/contact/' + uid, uid);
 
-                                        $('body').load(window.location.href);
+                                        location.reload();
                                     });
                                 });
                             } else {
@@ -14125,7 +14125,9 @@ axios.get('../api/v1/contact').then(function (res) {
                                 contact.email = $('#contactEmail').val();
                                 contact.phone = $('#contactPhone').val();
                                 contact.id = data.id;
-                                axios.post('api/v1/contact/edit', contact).then(function (res) {});
+                                axios.post('api/v1/contact/edit', contact).then(function (res) {
+                                    location.reload();
+                                });
                             }
                         }
                     });
@@ -14135,7 +14137,7 @@ axios.get('../api/v1/contact').then(function (res) {
                 $('#contact_delete_btn').click(function () {
                     if (confirm("Want to delete?")) {
                         deleteData('api/v1/contact/' + uid, uid);
-                        $('body').load(window.location.href + "#hotel_table");
+                        location.reload();
                     }
                 });
             }
@@ -14236,6 +14238,7 @@ axios.get('../api/v1/hotel').then(function (res) {
                     $('form #hotelAddress').val(address);
                     $('form #btn_edit_hotel').click(function () {
                         updateData('api/v1/hotel/edit', uid);
+                        location.reload();
                     });
                 });
 
@@ -14244,7 +14247,7 @@ axios.get('../api/v1/hotel').then(function (res) {
                     if (confirm("Want to delete?")) {
                         deleteData('api/v1/hotel/' + uid, uid);
                     }
-                    $('body').load(window.location.href);
+                    location.reload();
                 });
             }
         });
@@ -14333,6 +14336,78 @@ $(document).ready(function () {
         }).catch(function (error) {
             showError(error.response.data);
         });
+    });
+});
+
+/* Upload File and Parse it*/
+
+$(document).ready(function () {
+
+    $('.custom-file-input').on('change', function () {
+
+        var fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+
+    $('.container').on('click', '.btn', function () {
+        // var file = $('#exceldoc').prop('files')[0];
+        var file = document.getElementById('exceldoc').files[0];
+        var config = {
+            delimiter: "", // auto-detect
+            newline: "", // auto-detect
+            quoteChar: '"',
+            escapeChar: '"',
+            header: true,
+            trimHeader: false,
+            dynamicTyping: false,
+            preview: 0,
+            encoding: "",
+            worker: false,
+            comments: false,
+            step: undefined,
+            complete: function complete(results, file) {
+                // console.log("Parsing complete:", results.data[0]);
+                uploadData(results.data);
+            },
+            error: undefined,
+            download: false,
+            skipEmptyLines: false,
+            chunk: undefined,
+            fastMode: undefined,
+            beforeFirstChunk: undefined,
+            withCredentials: undefined
+        };
+        var data = Papa.parse(file, config);
+
+        function uploadData(results) {
+            results.forEach(function (data) {
+                var newHotel = {};
+                newHotel.name = data.Hotel;
+                newHotel.address = "";
+
+                axios.post('../api/v1/hotel', newHotel).then(function (res) {
+                    var contact = {};
+                    contact.hotel_id = res.data.id;
+
+                    contact.name = data.Name;
+                    contact.position = data.Position;
+                    contact.title = data.Title;
+                    contact.email = data.Email;
+                    contact.phone = data.Phone;
+
+                    axios.post('../api/v1/contact', contact).then(function (res) {
+                        // document.getElementById("#new_contact").reset()
+
+
+                    }).catch(function (error) {
+                        console.log(error.response);
+                    });
+                });
+            });
+
+            $('.alert-success').show();
+            $('.alert-success').append('<strong>Success!</strong> Indicates a successful or positive action.');
+        }
     });
 });
 

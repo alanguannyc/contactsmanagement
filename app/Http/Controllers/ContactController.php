@@ -23,7 +23,7 @@ class ContactController extends Controller
             'name' => 'required|max:255',
             'position' => 'required|max:255',
             'email' => 'required|max:255',
-            'title' => 'required|max:255',
+            
             
         ]);
 
@@ -34,7 +34,7 @@ class ContactController extends Controller
         $hotel->addContact(
             new Contact(request(['name','position','title','email','phone']))
         );
-        session()->flash('message','Your contact has been added!');
+        // session()->flash('message','Your contact has been added!');
     }
 
     public function update(Request $request) {

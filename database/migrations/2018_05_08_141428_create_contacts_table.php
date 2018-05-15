@@ -18,7 +18,7 @@ class CreateContactsTable extends Migration
             $table->integer('hotel_id');
             $table->string('name');
             $table->string('position');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->timestamps();

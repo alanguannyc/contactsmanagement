@@ -5,16 +5,21 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>CONTACTS MANAGEMENT</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
         <!-- Styles -->
         <style>
             html, body {
+                background: url("image/ocean.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
                 background-color: #fff;
-                color: #636b6f;
+                color: #002d72;
                 font-family: 'Raleway', sans-serif;
                 font-weight: 100;
                 height: 100vh;
@@ -43,10 +48,26 @@
 
             .content {
                 text-align: center;
+                
+            }
+
+            .bg {
+                /* The image used */
+                background-image: url("image/ocean.png");
+
+                /* Full height */
+                height: 100%; 
+
+                /* Center and scale the image nicely */
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
             }
 
             .title {
-                font-size: 84px;
+                font-size: 50px;
+                font-weight: 600;
+                letter-spacing: 5px;
             }
 
             .links > a {
@@ -61,6 +82,15 @@
 
             .m-b-md {
                 margin-bottom: 30px;
+            }
+
+            img {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                font-weight: 600;
+                background-color: #002d72;
             }
         </style>
     </head>
@@ -77,18 +107,14 @@
                 </div>
             @endif
 
-            <div class="content">
+            <div class="content" id="bg" >
+                    <img src="/image/hanyc.png" width="280" height="90">
                 <div class="title m-b-md">
-                    Laravel
+                    CONTACTS MANAGEMENT
                 </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+                
+                <a href="/admin"><button type="button" id="start" class="btn btn-primary btn-lg btn-block">START</button></a>
+                
             </div>
         </div>
     </body>

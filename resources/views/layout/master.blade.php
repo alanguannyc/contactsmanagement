@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Contacts Management | {APP_NAME}</title>
+    <title>{{config("app.name",'CRM')}}</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -47,7 +47,7 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Hotel Association of New York City</span></a>
+              <a href="/" class="site_title"><i class="fa fa-building"></i> <span>Hotel Association of New York City</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -63,21 +63,18 @@
               </div>
             </div> --}}
             <!-- /menu profile quick info -->
-
+           
             <br />
-            <div class="alert alert-success" style="display:none"></div>
+            
+            
             <!-- sidebar menu -->
             @include('layout.sidebar')
             <!-- /sidebar menu -->
-                @if ($flash = session('message'))
-                <div id="flash-message" class="alert alert-success" role="alert">
-                  {{ $flash }}
-                </div>
-                @endif
+                
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon " aria-hidden="true"></span>
+              <a data-toggle="tooltip" data-placement="top" title="Upload" href="/upload">
+                <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
               </a>
               <a data-toggle="tooltip" data-placement="top" title="FullScreen">
                 <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
@@ -100,13 +97,18 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
-          @include('layout.header')
+          {{-- @include('layout.header') --}}
           
           @include('layout.errors')
           <!-- /top tiles -->
           @yield('content')
           
         </div>
+        {{-- @if ($flash = session('message'))
+          <div id="flash-message" class="alert alert-success" role="alert">
+            {{ $flash }}
+          </div>
+          @endif --}}
       </div>
         <!-- /page content -->
 

@@ -18,6 +18,12 @@ Route::get('/hotel', function () {
     return view('hotelIndex');
 });
 
+Route::get('/contact', 'ContactController@index');
+
+Route::get('/upload', function () {
+    return view('upload');
+});
+
 Route::group(['prefix' => 'add'], function () {
     Route::get('/add', function () {
         return view('newContact');
@@ -70,3 +76,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+

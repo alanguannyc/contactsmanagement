@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="alert alert-danger" style="display:none"></div>
+<div class="alert alert-success" style="display:none"></div>
 <form autocomplete="off" id="new_contact">
         <div class="form-group autocomplete">
                 <label for="HotelInput">Hotel</label>
