@@ -22,9 +22,9 @@ Route::get('/contact', 'ContactController@index');
 
 Route::get('/upload', function () {
     return view('upload');
-});
+})->middleware(['auth','admin']);
 
-Route::group(['prefix' => 'add'], function () {
+Route::group(['prefix' => 'add', 'middleware' => ['auth','admin', 'web']], function () {
     Route::get('/add', function () {
         return view('newContact');
     });
@@ -37,7 +37,6 @@ Route::group(['prefix' => 'add'], function () {
         return view('newHotel');
     });
 });
-
 
 
 Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], function () {

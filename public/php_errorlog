@@ -1,0 +1,2 @@
+[15-May-2018 15:12:05 CST6CDT] PHP Fatal error:  require(): Failed opening required '/home/hanyc105/public_html/contactsmanagement/public/../vendor/autoload.php' (include_path='.:/usr/local/php71/pear') in /home/hanyc105/public_html/contactsmanagement/public/index.php on line 24
+[15-May-2018 15:15:26 CST6CDT] PHP Fatal error:  require(): Failed opening required '/home/hanyc105/public_html/contactsmanagement/public/../vendor/autoload.php' (include_path='.:/usr/local/php71/pear') in /home/hanyc105/public_html/contactsmanagement/public/index.php on line 24
