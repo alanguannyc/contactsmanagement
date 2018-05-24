@@ -14,7 +14,7 @@
         <!-- Styles -->
         <style>
             html, body {
-                background: url("image/ocean.png");
+                background: url("image/ocean1.png");
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;

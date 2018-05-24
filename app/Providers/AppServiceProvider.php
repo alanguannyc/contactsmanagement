@@ -21,20 +21,20 @@ class AppServiceProvider extends ServiceProvider
         \App\Role::firstOrCreate(['name'=>'member']);
         
         
-        // $users = \DB::table('users')->count();
-        // $userIncrease = \DB::table('users')->where('created_at', '>', Carbon::now()->startOfWeek())
-        // ->where('created_at', '<', Carbon::now()->endOfWeek())
-        // ->count();
-        // $hotels = \DB::table('hotels')->count();
-        // $hotelIncrease = \DB::table('hotels')->where('created_at', '>', Carbon::now()->startOfWeek())
-        // ->where('created_at', '<', Carbon::now()->endOfWeek())
-        // ->count();
-        // $contacts = \DB::table('contacts')->count();
-        // $contactIncrease = \DB::table('contacts')->where('created_at', '>', Carbon::now()->startOfWeek())
-        // ->where('created_at', '<', Carbon::now()->endOfWeek())
-        // ->count();
+        $users = \DB::table('users')->count();
+        $userIncrease = \DB::table('users')->where('created_at', '>', Carbon::now()->startOfWeek())
+        ->where('created_at', '<', Carbon::now()->endOfWeek())
+        ->count();
+        $hotels = \DB::table('hotels')->count();
+        $hotelIncrease = \DB::table('hotels')->where('created_at', '>', Carbon::now()->startOfWeek())
+        ->where('created_at', '<', Carbon::now()->endOfWeek())
+        ->count();
+        $contacts = \DB::table('contacts')->count();
+        $contactIncrease = \DB::table('contacts')->where('created_at', '>', Carbon::now()->startOfWeek())
+        ->where('created_at', '<', Carbon::now()->endOfWeek())
+        ->count();
 
-        // View::share(['users'=>$users,'hotels'=>$hotels,'contacts'=>$contacts, 'userIncrease'=>$userIncrease, 'hotelIncrease'=>$hotelIncrease, 'contactIncrease'=>$contactIncrease]);
+        View::share(['users'=>$users,'hotels'=>$hotels,'contacts'=>$contacts, 'userIncrease'=>$userIncrease, 'hotelIncrease'=>$hotelIncrease, 'contactIncrease'=>$contactIncrease]);
     }
 
     /**

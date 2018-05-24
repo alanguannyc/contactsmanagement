@@ -7,7 +7,7 @@
 
 <div>
 <!-- Button trigger modal -->
-<button type="button" id="modal_btn" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+<button type="button" id="hotel_edit_btn" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
         EDIT
       </button>
       <button type="button" id="hotel_delete_btn" class="btn btn-danger">
