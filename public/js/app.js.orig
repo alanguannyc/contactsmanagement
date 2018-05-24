@@ -14053,7 +14053,11 @@ Perform contact crud
 //get contact list
 
 $(document).ready(function () {
+<<<<<<< HEAD
     var table = $('#user_table').DataTable({
+=======
+    var table = $('#contact_table').DataTable({
+>>>>>>> 18fc578... added user management
         // stateSave: true,
         "ajax": { "url": "/api/v1/contact", "dataSrc": "" },
         // data:newdata,
@@ -14068,7 +14072,11 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'pdf']
     });
+<<<<<<< HEAD
     $('#user_table tbody').on('click', 'tr', function () {
+=======
+    $('#contact_table tbody').on('click', 'tr', function () {
+>>>>>>> 18fc578... added user management
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
         } else {
@@ -14153,6 +14161,7 @@ $(document).ready(function () {
         var data = table.row('.selected').data();
         var uid = data.id;
         if (confirm("Want to delete?")) {
+<<<<<<< HEAD
 
             deleteData('api/v1/contact/' + uid, uid, table);
         }
@@ -14167,6 +14176,22 @@ $(document).ready(function () {
 
         var row = table.row(tr);
 
+=======
+
+            deleteData('api/v1/contact/' + uid, uid, table);
+        }
+        // $('#user_table').DataTable().ajax.reload(null, false);
+        // table.ajax.reload(null, false);
+        // reloadTable(table);
+        // table.draw();                       
+    });
+
+    $('#contact_table tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+
+        var row = table.row(tr);
+
+>>>>>>> 18fc578... added user management
         if (row.child.isShown()) {
             // This row is already open - close it
             row.child.hide();
@@ -14231,38 +14256,6 @@ $(document).ready(function () {
         }
     });
 
-<<<<<<< HEAD
-        $('#hotel_table tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            } else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-                var data = table.row(this).data();
-                var name = data.name;
-                var address = data.address;
-                var uid = data.id;
-
-                //hotel edit
-                $('#modal_btn').click(function () {
-                    table.$('tr.selected').removeClass('selected');
-                    $('#exampleModalLong .modal-title').html(name);
-                    $('#hotelName').val(name);
-                    $('form #hotelAddress').val(address);
-                    $('form #btn_edit_hotel').click(function () {
-                        updateData('api/v1/hotel/edit', uid);
-                    });
-                });
-
-                //hotel delete
-                $('#hotel_delete_btn').click(function () {
-                    if (confirm("Want to delete?")) {
-                        deleteData('api/v1/hotel/' + uid, uid);
-                    }
-                });
-            }
-        });
-=======
     //hotel edit
     $('#hotel_edit_btn').off('click').click(function () {
 
@@ -14270,7 +14263,6 @@ $(document).ready(function () {
         var name = data.name;
         var address = data.address;
         var uid = data.id;
->>>>>>> 2433b44d2507e7070bdc3712990216487a23a224
 
         $('#exampleModalLong .modal-title').html(name);
         $('#hotelName').val(name);
@@ -14396,6 +14388,80 @@ $(document).ready(function () {
             showError(error.response.data);
         });
     });
+});
+
+/* 
+
+    Manage Users 
+
+*/
+
+$(document).ready(function () {
+    var table = $('#user_table').DataTable({
+        "ajax": { "url": "/api/v1/user", "dataSrc": "" },
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "columnDefs": [{
+            "targets": [2],
+            "createdCell": function createdCell(td, cellData, rowData, row, col) {
+                // $(td).replaceWith('<td><select><option>admin</option><option>member</option></select></td>')
+                $(td).attr('contenteditable', 'true');
+                $(td).attr('id', 'role' + rowData.id);
+            }
+        }],
+        columns: [{ data: 'name' }, { data: 'email' }, { data: 'roles[0].name', className: 'userRole' }, { data: null,
+            // className: "center",
+            // defaultContent: '<a href="" class="user_edit" ><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+            defaultContent: '<a href="" class="user_edit" data-toggle="modal" data-target="#user_modal_center"><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+        }]
+    });
+    //   $('#user_table tbody').on( 'click', 'tr', function () {
+    //       if ( $(this).hasClass('selected') ) {
+    //           $(this).removeClass('selected');
+    //       }
+    //       else {
+    //           table.$('tr.selected').removeClass('selected');
+    //           $(this).addClass('selected');
+    //       }} );
+
+
+    //user edit
+    $('body').on('click', 'a.user_edit', function (e) {
+        e.preventDefault();
+        var index = $(this).closest('tr').index();
+        var data = table.row(index).data();
+        $('#user_modal_title').html(data.name);
+        $('#userRole').val(data.roles[0].name);
+        $('#userModalSave').click(function () {
+            var newUser = {};
+            newUser.role = $('#userRole').val();
+            newUser.id = data.id;
+            axios.patch('./api/v1/user/' + newUser.id, newUser).then(function (res) {
+                reloadTable(table);
+            }).catch(function (eer) {
+                console.log(eer);
+            });
+        });
+    });
+
+    //delete user
+    $('body').on('click', 'a.user_remove', function (e) {
+        e.preventDefault();
+        var index = $(this).closest('tr').index();
+        var data = table.row(index).data();
+        var uid = data.id;
+        if (confirm("Want to delete?")) {
+            deleteData('api/v1/user/' + uid, uid, table);
+        }
+    });
+    // $("body").on('click','td',function(){
+    //     if($(this).prop("contentEditable") == true){
+    //         $(this).prop("contentEditable","false");
+    //     } else {
+    //         $(this).prop("contentEditable","true");
+    //     }
+    // })
 });
 
 /* Upload File and Parse it*/

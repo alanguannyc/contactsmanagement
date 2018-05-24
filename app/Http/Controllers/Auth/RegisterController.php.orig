@@ -74,7 +74,7 @@ class RegisterController extends Controller
 <<<<<<< HEAD
 =======
         Mail::to(\App\User::find(1))->send(new NewUser($user));
->>>>>>> office
+>>>>>>> 18fc578... added user management
         return $user;
     }
 }

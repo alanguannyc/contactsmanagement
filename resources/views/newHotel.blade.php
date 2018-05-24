@@ -17,4 +17,11 @@
             </div>
     <button type="submit" id="btn_hotel" class="btn btn-primary">Add</button>
 </form>
+
+
+</br>
+
+
+
+
 @endsection

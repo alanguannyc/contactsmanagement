@@ -215,7 +215,11 @@ Perform contact crud
 //get contact list
     
     $(document).ready( function () {
+<<<<<<< HEAD
               var table = $('#user_table').DataTable(
+=======
+              var table = $('#contact_table').DataTable(
+>>>>>>> 18fc578... added user management
                     {
                         // stateSave: true,
                         "ajax":{"url":"/api/v1/contact","dataSrc":""},
@@ -243,7 +247,11 @@ Perform contact crud
                         ]
                     }
                 )
+<<<<<<< HEAD
                 $('#user_table tbody').on( 'click', 'tr', function () {
+=======
+                $('#contact_table tbody').on( 'click', 'tr', function () {
+>>>>>>> 18fc578... added user management
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
                     }
@@ -346,7 +354,11 @@ Perform contact crud
                 })
 
 
+<<<<<<< HEAD
                 $('#user_table tbody').on('click', 'td.details-control', function () {
+=======
+                $('#contact_table tbody').on('click', 'td.details-control', function () {
+>>>>>>> 18fc578... added user management
                     var tr = $(this).closest('tr');
         
                     var row = table.row( tr );
@@ -410,35 +422,11 @@ Perform contact crud
                         "defaultContent": "<i>Not set</i>"  },
                         { data: 'created_at'},
                         
-<<<<<<< HEAD
-                        //hotel edit
-                            $('#modal_btn').click(function(){
-                                table.$('tr.selected').removeClass('selected');
-                                $('#exampleModalLong .modal-title').html(name)
-                                $('#hotelName').val(name);
-                                $('form #hotelAddress').val(address);
-                                $('form #btn_edit_hotel').click(function(){         
-                                    updateData('api/v1/hotel/edit', uid);
-                                    
-                                })
-                                
-                            });
-
-                        //hotel delete
-                            $('#hotel_delete_btn').click(function(){
-                                if(confirm("Want to delete?")) {
-                                    deleteData(`api/v1/hotel/${uid}`, uid);
-                                }
-                                
-
-                            })
-=======
                     ],
                     dom: 'Bfrtip',
                     buttons: [
                         'copy', 'csv', 'excel', 'pdf'
                     ]
->>>>>>> 2433b44d2507e7070bdc3712990216487a23a224
             
                 }
             );
@@ -511,7 +499,12 @@ function showError(data){
 
 function showSucess(msg){
         jQuery('.alert-success').html('<p>'+msg+'</p>').show();
+<<<<<<< HEAD
         jQuery('.alert-success').fadeOut(5000,null);
+=======
+        jQuery('.alert-success').fadeOut(3000,null);
+        disableBtn()
+>>>>>>> 18fc578... added user management
         
 }
 
@@ -530,7 +523,10 @@ function disableBtn(){
     // }
         
     // },1000);
+<<<<<<< HEAD
     console.log('done')
+=======
+>>>>>>> 18fc578... added user management
 }
 
         //ajax new hotel/contact form
@@ -551,7 +547,11 @@ function disableBtn(){
                     $('#hotelAddress').val('');
                     
                     showSucess('Your hotel has been added!')
+<<<<<<< HEAD
                     disableBtn()
+=======
+                    // disableBtn()
+>>>>>>> 18fc578... added user management
                     // document.getElementById(id).prop('disabled',true)
                     // $('#btn_hotel').prop('disabled', true);
                     // document.getElementById('#btn_hotel').attr('disabled',true);
@@ -586,8 +586,13 @@ function disableBtn(){
                     $('#contactTitle').val('');
                     $('#contactEmail').val('');
                     $('#contactPhone').val('');
+                    
                     showSucess('Your contact has been added!')
+<<<<<<< HEAD
                     disableBtn()
+=======
+                    
+>>>>>>> 18fc578... added user management
                     }).catch(function (error) {
                         console.log(error.response)
                         showError(error.response.data)
@@ -597,6 +602,94 @@ function disableBtn(){
                   })
             })
         });
+
+/* 
+
+    Manage Users 
+
+*/
+
+        $(document).ready( function () {
+            var table = $('#user_table').DataTable(
+                  {
+                    "ajax":{"url":"/api/v1/user","dataSrc":""},
+                    "paging":   false,
+                    "ordering": false,
+                    "info":     false,
+                    "columnDefs": [ {
+                        "targets": [2],
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            // $(td).replaceWith('<td><select><option>admin</option><option>member</option></select></td>')
+                              $(td).attr('contenteditable','true')
+                              $(td).attr('id','role'+rowData.id)                 
+                          }
+                      } ],
+                      columns: [
+                          { data: 'name' },
+                          { data: 'email' },
+                          { data: 'roles[0].name', className: 'userRole' },
+                          { data: null,
+                            // className: "center",
+                            // defaultContent: '<a href="" class="user_edit" ><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+                            defaultContent: '<a href="" class="user_edit" data-toggle="modal" data-target="#user_modal_center"><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+                           },
+                      ]
+                  }
+              )
+            //   $('#user_table tbody').on( 'click', 'tr', function () {
+            //       if ( $(this).hasClass('selected') ) {
+            //           $(this).removeClass('selected');
+            //       }
+            //       else {
+            //           table.$('tr.selected').removeClass('selected');
+            //           $(this).addClass('selected');
+            //       }} );
+                      
+                      
+              //user edit
+              $('body').on('click', 'a.user_edit', function (e) {
+                e.preventDefault();
+                var index = $(this).closest('tr').index();
+                var data = table.row(index).data();
+                $('#user_modal_title').html(data.name)
+                $('#userRole').val(data.roles[0].name)
+                $('#userModalSave').click(function(){
+                    var newUser = {}
+                    newUser.role = $('#userRole').val()
+                    newUser.id = data.id
+                    axios.patch(`./api/v1/user/${newUser.id}`, newUser).then(res=>{
+                        reloadTable(table)
+                    }).catch(eer => {
+                        console.log(eer)
+                    })
+                })
+            } );
+
+             //delete user
+             $('body').on('click', 'a.user_remove', function (e) {
+                e.preventDefault();
+                var index = $(this).closest('tr').index();
+                var data = table.row(index).data();
+                var uid = data.id
+                if(confirm("Want to delete?")) {
+                    deleteData(`api/v1/user/${uid}`, uid, table);
+                }  
+            } )
+            // $("body").on('click','td',function(){
+            //     if($(this).prop("contentEditable") == true){
+            //         $(this).prop("contentEditable","false");
+            //     } else {
+            //         $(this).prop("contentEditable","true");
+            //     }
+            // })
+          } );
+
+
+
+
+
+
+
 
  /* Upload File and Parse it*/
 

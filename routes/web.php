@@ -22,9 +22,13 @@ Route::get('/contact', 'ContactController@index');
 
 Route::get('/upload', function () {
     return view('upload');
-})->middleware(['auth','admin']);
+});
 
-Route::group(['prefix' => 'add', 'middleware' => ['auth','admin', 'web']], function () {
+Route::get("/user", function(){
+    return view('userIndex');
+});
+
+Route::group(['prefix' => 'add'], function () {
     Route::get('/add', function () {
         return view('newContact');
     });
@@ -48,6 +52,10 @@ Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], fun
         return $hotels=App\Hotel::all();
     });
 
+    Route::get('/user', function(){
+        return $users=\App\User::with('roles')->get();
+    });
+
     Route::post('/hotel', 'HotelController@store');
     Route::post('/hotel/edit', 'HotelController@update');
     Route::delete('/hotel/{id}', 'HotelController@destroy');
@@ -56,6 +64,8 @@ Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], fun
     Route::post('/contact/edit', 'ContactController@update');
     Route::delete('/contact/{id}', 'ContactController@destroy');
 
+
+    Route::resource('user', 'UserController')->except(['index']);
 });
 
 Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function()
@@ -70,6 +80,16 @@ Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function(
     //     return $users=App\User::with(['profile'])->get();
     // });
 });
+
+// Route::group(['prefix' => 'user','middleware' => ['auth','admin', 'web']], function () {
+    
+//     Route::resource('user', 'UserController');
+//     // Route::get('/', 'UserController@index');
+//     // Route::post('/', 'UserController@store');
+//     // Route::delete('/', 'UserController@destroy');
+
+
+// });
 
 Auth::routes();
 

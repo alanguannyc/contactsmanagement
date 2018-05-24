@@ -32,7 +32,7 @@ Route::get("/user", function(){
 });
 
 Route::group(['prefix' => 'add'], function () {
->>>>>>> office
+>>>>>>> 18fc578... added user management
     Route::get('/add', function () {
         return view('newContact');
     });

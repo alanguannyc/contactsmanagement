@@ -14053,7 +14053,7 @@ Perform contact crud
 //get contact list
 
 $(document).ready(function () {
-    var table = $('#user_table').DataTable({
+    var table = $('#contact_table').DataTable({
         // stateSave: true,
         "ajax": { "url": "/api/v1/contact", "dataSrc": "" },
         // data:newdata,
@@ -14068,7 +14068,7 @@ $(document).ready(function () {
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'pdf']
     });
-    $('#user_table tbody').on('click', 'tr', function () {
+    $('#contact_table tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
         } else {
@@ -14162,7 +14162,7 @@ $(document).ready(function () {
         // table.draw();                       
     });
 
-    $('#user_table tbody').on('click', 'td.details-control', function () {
+    $('#contact_table tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
 
         var row = table.row(tr);
@@ -14363,6 +14363,80 @@ $(document).ready(function () {
             showError(error.response.data);
         });
     });
+});
+
+/* 
+
+    Manage Users 
+
+*/
+
+$(document).ready(function () {
+    var table = $('#user_table').DataTable({
+        "ajax": { "url": "/api/v1/user", "dataSrc": "" },
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "columnDefs": [{
+            "targets": [2],
+            "createdCell": function createdCell(td, cellData, rowData, row, col) {
+                // $(td).replaceWith('<td><select><option>admin</option><option>member</option></select></td>')
+                $(td).attr('contenteditable', 'true');
+                $(td).attr('id', 'role' + rowData.id);
+            }
+        }],
+        columns: [{ data: 'name' }, { data: 'email' }, { data: 'roles[0].name', className: 'userRole' }, { data: null,
+            // className: "center",
+            // defaultContent: '<a href="" class="user_edit" ><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+            defaultContent: '<a href="" class="user_edit" data-toggle="modal" data-target="#user_modal_center"><i class="fas fa-edit fa-lg"></i></a>&nbsp<a href="" class="user_remove danger" style="color:Tomato"><i class="fas fa-trash-alt fa-lg"></i></a>'
+        }]
+    });
+    //   $('#user_table tbody').on( 'click', 'tr', function () {
+    //       if ( $(this).hasClass('selected') ) {
+    //           $(this).removeClass('selected');
+    //       }
+    //       else {
+    //           table.$('tr.selected').removeClass('selected');
+    //           $(this).addClass('selected');
+    //       }} );
+
+
+    //user edit
+    $('body').on('click', 'a.user_edit', function (e) {
+        e.preventDefault();
+        var index = $(this).closest('tr').index();
+        var data = table.row(index).data();
+        $('#user_modal_title').html(data.name);
+        $('#userRole').val(data.roles[0].name);
+        $('#userModalSave').click(function () {
+            var newUser = {};
+            newUser.role = $('#userRole').val();
+            newUser.id = data.id;
+            axios.patch('./api/v1/user/' + newUser.id, newUser).then(function (res) {
+                reloadTable(table);
+            }).catch(function (eer) {
+                console.log(eer);
+            });
+        });
+    });
+
+    //delete user
+    $('body').on('click', 'a.user_remove', function (e) {
+        e.preventDefault();
+        var index = $(this).closest('tr').index();
+        var data = table.row(index).data();
+        var uid = data.id;
+        if (confirm("Want to delete?")) {
+            deleteData('api/v1/user/' + uid, uid, table);
+        }
+    });
+    // $("body").on('click','td',function(){
+    //     if($(this).prop("contentEditable") == true){
+    //         $(this).prop("contentEditable","false");
+    //     } else {
+    //         $(this).prop("contentEditable","true");
+    //     }
+    // })
 });
 
 /* Upload File and Parse it*/
