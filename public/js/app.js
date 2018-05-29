@@ -14238,7 +14238,6 @@ axios.get('../api/v1/hotel').then(function (res) {
                     $('form #hotelAddress').val(address);
                     $('form #btn_edit_hotel').click(function () {
                         updateData('api/v1/hotel/edit', uid);
-                        location.reload();
                     });
                 });
 
@@ -14247,7 +14246,6 @@ axios.get('../api/v1/hotel').then(function (res) {
                     if (confirm("Want to delete?")) {
                         deleteData('api/v1/hotel/' + uid, uid);
                     }
-                    location.reload();
                 });
             }
         });

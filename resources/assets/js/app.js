@@ -456,7 +456,7 @@ Perform contact crud
                                 $('form #hotelAddress').val(address);
                                 $('form #btn_edit_hotel').click(function(){         
                                     updateData('api/v1/hotel/edit', uid);
-                                    location.reload();
+                                    
                                 })
                                 
                             });
@@ -466,7 +466,7 @@ Perform contact crud
                                 if(confirm("Want to delete?")) {
                                     deleteData(`api/v1/hotel/${uid}`, uid);
                                 }
-                                location.reload();
+                                
 
                             })
             
