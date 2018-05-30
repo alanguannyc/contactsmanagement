@@ -527,6 +527,10 @@ function disableBtn(){
                     $('#hotelAddress').val('');
                     
                     showSucess('Your hotel has been added!')
+                    // disableBtn()
+                    // document.getElementById(id).prop('disabled',true)
+                    // $('#btn_hotel').prop('disabled', true);
+                    // document.getElementById('#btn_hotel').attr('disabled',true);
                 }).catch(function (error) {
                     showError(error.response.data)
                   })

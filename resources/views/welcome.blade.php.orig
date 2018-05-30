@@ -18,7 +18,7 @@
                 background: url("image/bg_ocean.png");
 =======
                 background: url("image/ocean1.png");
->>>>>>> 18fc578... added user management
+>>>>>>> 18fc5781c2e8c3981ebddff4cec7deb1af0adef2
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
