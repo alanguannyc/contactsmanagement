@@ -84,7 +84,7 @@
 
 
 
-<table id="user_table" class="display">
+<table id="contact_table" class="display">
         
     <thead>
         <tr>
