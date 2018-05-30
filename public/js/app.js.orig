@@ -14231,6 +14231,38 @@ $(document).ready(function () {
         }
     });
 
+<<<<<<< HEAD
+        $('#hotel_table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                var data = table.row(this).data();
+                var name = data.name;
+                var address = data.address;
+                var uid = data.id;
+
+                //hotel edit
+                $('#modal_btn').click(function () {
+                    table.$('tr.selected').removeClass('selected');
+                    $('#exampleModalLong .modal-title').html(name);
+                    $('#hotelName').val(name);
+                    $('form #hotelAddress').val(address);
+                    $('form #btn_edit_hotel').click(function () {
+                        updateData('api/v1/hotel/edit', uid);
+                    });
+                });
+
+                //hotel delete
+                $('#hotel_delete_btn').click(function () {
+                    if (confirm("Want to delete?")) {
+                        deleteData('api/v1/hotel/' + uid, uid);
+                    }
+                });
+            }
+        });
+=======
     //hotel edit
     $('#hotel_edit_btn').off('click').click(function () {
 
@@ -14238,6 +14270,7 @@ $(document).ready(function () {
         var name = data.name;
         var address = data.address;
         var uid = data.id;
+>>>>>>> 2433b44d2507e7070bdc3712990216487a23a224
 
         $('#exampleModalLong .modal-title').html(name);
         $('#hotelName').val(name);

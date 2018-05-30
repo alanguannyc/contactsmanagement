@@ -410,11 +410,35 @@ Perform contact crud
                         "defaultContent": "<i>Not set</i>"  },
                         { data: 'created_at'},
                         
+<<<<<<< HEAD
+                        //hotel edit
+                            $('#modal_btn').click(function(){
+                                table.$('tr.selected').removeClass('selected');
+                                $('#exampleModalLong .modal-title').html(name)
+                                $('#hotelName').val(name);
+                                $('form #hotelAddress').val(address);
+                                $('form #btn_edit_hotel').click(function(){         
+                                    updateData('api/v1/hotel/edit', uid);
+                                    
+                                })
+                                
+                            });
+
+                        //hotel delete
+                            $('#hotel_delete_btn').click(function(){
+                                if(confirm("Want to delete?")) {
+                                    deleteData(`api/v1/hotel/${uid}`, uid);
+                                }
+                                
+
+                            })
+=======
                     ],
                     dom: 'Bfrtip',
                     buttons: [
                         'copy', 'csv', 'excel', 'pdf'
                     ]
+>>>>>>> 2433b44d2507e7070bdc3712990216487a23a224
             
                 }
             );

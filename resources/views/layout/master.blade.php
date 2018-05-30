@@ -97,7 +97,7 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
-          {{-- @include('layout.header') --}}
+          @include('layout.header')
           
           @include('layout.errors')
           <!-- /top tiles -->
@@ -161,7 +161,7 @@
     {{-- use axios --}}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.1') }}"></script>
     {{-- datatable --}}
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
  

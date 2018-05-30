@@ -14,7 +14,11 @@
         <!-- Styles -->
         <style>
             html, body {
+<<<<<<< HEAD
                 background: url("image/bg_ocean.png");
+=======
+                background: url("image/ocean1.png");
+>>>>>>> office
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
