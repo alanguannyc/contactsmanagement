@@ -224,7 +224,12 @@ Perform contact crud
                         "columnDefs": [ {
                             "targets": 3,
                             "render": function ( data, type, row, meta ) {
-                                if (data.id){
+                                if (data == null){
+                                    return "<i>Not set</i>"
+                                } else if (data.id == null) {
+                                    return data.name;
+                                } else {
+                                    
                                     return '<a href="'+'/hotel/'+data.id+'">'+data.name+' </a>';
                                 }
                                 
@@ -242,7 +247,8 @@ Perform contact crud
                             },
                             { data: 'name' },
                             { data: 'email' },
-                            { data: 'hotel' },
+                            { data: 'hotel',
+                            "defaultContent": "<i>Not set</i>" },
                             { data: 'position' },
                             { data: 'title'},
                             { data: 'phone',

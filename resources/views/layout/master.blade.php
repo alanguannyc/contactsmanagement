@@ -168,7 +168,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.3.1/purl.min.js"></script>
     <!-- purl -->
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js?v=1.4') }}"></script>
+    <script src="{{ asset('js/app.js?v=1.5') }}"></script>
 
 
     {{-- datatable --}}

@@ -1163,7 +1163,12 @@ $(document).ready(function () {
         "columnDefs": [{
             "targets": 3,
             "render": function render(data, type, row, meta) {
-                if (data.id) {
+                if (data == null) {
+                    return "<i>Not set</i>";
+                } else if (data.id == null) {
+                    return data.name;
+                } else {
+
                     return '<a href="' + '/hotel/' + data.id + '">' + data.name + ' </a>';
                 }
             }
@@ -1175,7 +1180,8 @@ $(document).ready(function () {
             "orderable": false,
             "data": null,
             "defaultContent": 'view'
-        }, { data: 'name' }, { data: 'email' }, { data: 'hotel' }, { data: 'position' }, { data: 'title' }, { data: 'phone',
+        }, { data: 'name' }, { data: 'email' }, { data: 'hotel',
+            "defaultContent": "<i>Not set</i>" }, { data: 'position' }, { data: 'title' }, { data: 'phone',
             "defaultContent": "<i>Not set</i>" }, { data: 'created_at' }],
         dom: 'Bfrtip',
         buttons: ['copy', 'csv', 'excel', 'pdf']
