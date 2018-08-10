@@ -74,7 +74,7 @@ Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], fun
     Route::post('/contact', 'ContactController@store');
     Route::post('/contact/edit', 'ContactController@update');
     Route::delete('/contact/{id}', 'ContactController@destroy');
-
+    Route::get('/contact/{id}', 'ContactController@show');
 
     Route::resource('user', 'UserController')->except(['index']);
 });

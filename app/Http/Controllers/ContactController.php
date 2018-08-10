@@ -48,4 +48,10 @@ class ContactController extends Controller
         $contact->delete();
         return $contact;
     }
+
+    public function show($id) {
+        $contact= Contact::with(['hotel'])->where('id','=',$id)->get();
+        
+        return $contact;
+    }
 }

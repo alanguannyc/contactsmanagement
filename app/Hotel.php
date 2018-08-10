@@ -15,4 +15,8 @@ class Hotel extends Model
     public function addContact($request){
         $this->contacts()->save($request);
     }
+
+    
+
+
 }

@@ -18,7 +18,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('hotel-index', require('./components/HotelIndex.vue'));
-
+Vue.component('contact-detail', require('./components/ContactDetail.vue'));
 const app = new Vue({
     el: '#app'
 });
