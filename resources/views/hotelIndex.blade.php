@@ -55,7 +55,7 @@
             <th>Name</th>
             <th>Address</th>
             <th>Added Date</th>
-            
+            <th>Contacts Number</th>
         </tr>
     </thead>
     

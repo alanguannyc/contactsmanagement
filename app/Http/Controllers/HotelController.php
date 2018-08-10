@@ -36,6 +36,12 @@ class HotelController extends Controller
         session()->flash('message','Your hotel information has been udpated!');
     }
 
+    public function show($id) {
+        $hotel = Hotel::with(['contacts'])->where('id','=',$id)->get();
+        return $hotel;
+        // session()->flash('message','Your hotel information has been udpated!');
+    }
+
     public function destroy($id) {
         $hotel= Hotel::find($id);
         $hotel->delete();

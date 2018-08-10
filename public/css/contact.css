@@ -31,7 +31,5 @@
   position: absolute;
   right: 20px;
   z-index: 10;
-  -webkit-animation: flash-message 10s forwards;
-          animation: flash-message 10s forwards;
 }
 

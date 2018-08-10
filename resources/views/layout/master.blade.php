@@ -45,8 +45,8 @@
   </head>
 
   <body class="nav-md">
-    <div class="container body">
-      <div class="main_container">
+    <div class="container body" >
+      <div class="main_container" >
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
@@ -98,13 +98,15 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        <div class="right_col" role="main">
+        <div class="right_col" role="main" id="app">
           <!-- top tiles -->
           @include('layout.header')
           
           @include('layout.errors')
-          <!-- /top tiles -->
-          @yield('content')
+         
+            @yield('content')
+        
+          
           
         </div>
         {{-- @if ($flash = session('message'))
@@ -163,8 +165,12 @@
     <script src="../build/js/custom.min.js"></script>
     {{-- use axios --}}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.3.1/purl.min.js"></script>
+    <!-- purl -->
     <!-- Scripts -->
     <script src="{{ asset('js/app.js?v=1.1') }}"></script>
+
+
     {{-- datatable --}}
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
  

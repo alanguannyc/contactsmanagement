@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
-
-class UserController extends Controller
+class FormController extends Controller
 {
+    public function addColumn()
+    {
+        Schema::table('hotels', function ( $table) {
+            $table->boolean('isOut')->default(false);
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //  $users = \App\User::all();
-         return view('userIndex');
+        //
     }
 
     /**
@@ -38,14 +41,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-        ]);
-        $user->roles()->attach(2);
-        Mail::to(\App\User::find(1))->send(new NewUser($user));
-        return $user;
+        //
     }
 
     /**
@@ -56,8 +52,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($request->id);
-
+        //
     }
 
     /**
@@ -80,17 +75,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($request->id);
-
-        // $user = $user->update($request->except('role'));
-        
-        if ($request->role == 'admin') {
-            $user->roles()->sync([1]);
-        } else if ($request->role == 'member'){
-            $user->roles()->sync([2]);
-        }
-
-        return $user;
+        //
     }
 
     /**
@@ -101,11 +86,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user= User::find($id);
-        $type_id = $user->roles[0]->id;
-        
-        $user->roles()->detach($type_id);
-        $user->delete();
-        return $type_id;
+        //
     }
 }

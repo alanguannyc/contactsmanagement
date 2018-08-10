@@ -14,8 +14,18 @@ use Carbon\Carbon;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/hotel', function () {
-    return view('hotelIndex');
+
+Route::group(['prefix' => 'hotel',  'middleware' => ['auth','admin']], function()
+{
+    Route::get('/', function() {
+        return view('hotelIndex');
+    });
+
+    Route::get('/{id}', function() {
+        return view('hotel-show');
+    });
+    
+
 });
 
 Route::get('/contact', 'ContactController@index');
@@ -49,7 +59,7 @@ Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], fun
     });
 
     Route::get('/hotel', function(){
-        return $hotels=App\Hotel::all();
+        return $hotels=App\Hotel::with('contacts')->get();
     });
 
     Route::get('/user', function(){
@@ -59,6 +69,7 @@ Route::group(['prefix' => 'api/v1','middleware' => ['auth','admin', 'web']], fun
     Route::post('/hotel', 'HotelController@store');
     Route::post('/hotel/edit', 'HotelController@update');
     Route::delete('/hotel/{id}', 'HotelController@destroy');
+    Route::get('hotel/{id}', 'HotelController@show');
 
     Route::post('/contact', 'ContactController@store');
     Route::post('/contact/edit', 'ContactController@update');
@@ -76,6 +87,8 @@ Route::group(['prefix' => 'admin',  'middleware' => ['auth','admin']], function(
     })->name('index');
 
     Route::get('/contact', 'ContactController@index')->name('user');
+
+
     // Route::get('/user/api', function () {
     //     return $users=App\User::with(['profile'])->get();
     // });
@@ -95,5 +108,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+
+//add new columns
+
 
 

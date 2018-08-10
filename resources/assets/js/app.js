@@ -5,7 +5,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+window.axios = require('axios');
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 window.Vue = require('vue');
 
@@ -15,7 +17,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('hotel-index', require('./components/HotelIndex.vue'));
 
 const app = new Vue({
     el: '#app'
@@ -243,6 +245,8 @@ Perform contact crud
                         ]
                     }
                 )
+
+
                 $('#contact_table tbody').on( 'click', 'tr', function () {
                     if ( $(this).hasClass('selected') ) {
                         $(this).removeClass('selected');
@@ -409,7 +413,7 @@ Perform contact crud
                         { data: 'address',
                         "defaultContent": "<i>Not set</i>"  },
                         { data: 'created_at'},
-                        
+                        { data: 'contacts.length'},
                     ],
                     dom: 'Bfrtip',
                     buttons: [
@@ -748,3 +752,16 @@ function disableBtn(){
 
     
  })
+
+
+ //Add Column
+ 
+
+//  $(document).ready(function(){
+//     $('body').on('click','#add-column',function(e){
+//         e.preventDefault();
+//         axios.post('./column').then(res => {
+//             console.log(res)
+//         })
+//     })
+//  })
