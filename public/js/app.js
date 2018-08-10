@@ -1160,13 +1160,21 @@ $(document).ready(function () {
     var table = $('#contact_table').DataTable({
         // stateSave: true,
         "ajax": { "url": "/api/v1/contact", "dataSrc": "" },
+        "columnDefs": [{
+            "targets": 3,
+            "render": function render(data, type, row, meta) {
+
+                return '<a href="' + '/hotel/' + data.id + '">' + data.name + ' </a>';
+            }
+
+        }],
         // data:newdata,
         columns: [{
             "className": 'details-control',
             "orderable": false,
             "data": null,
             "defaultContent": 'view'
-        }, { data: 'name' }, { data: 'email' }, { data: 'hotel.name',
+        }, { data: 'name' }, { data: 'email' }, { data: 'hotel',
             "defaultContent": "<i>Not set</i>" }, { data: 'position' }, { data: 'title' }, { data: 'phone',
             "defaultContent": "<i>Not set</i>" }, { data: 'created_at' }],
         dom: 'Bfrtip',
@@ -1314,6 +1322,13 @@ $(document).ready(function () {
         // "processing": true,
         // "serverSide": true,
         "ajax": { "url": "/api/v1/hotel", "dataSrc": "" },
+        "columnDefs": [{
+            "targets": 0,
+            "render": function render(data, type, row, meta) {
+                return '<a href="' + '/hotel/' + data.id + '">View</a>';
+            }
+
+        }],
         // data:newdata,
         columns: [{
             "className": 'details-control',
@@ -13954,11 +13969,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            contacts: {}
+            contacts: {},
+            hotel: {}
         };
     },
     mounted: function mounted() {
@@ -13969,8 +14007,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var id = url.segment(-1);
 
         axios.get("../api/v1/hotel/" + id).then(function (res) {
+            _this.hotel = res.data[0];
             _this.contacts = res.data[0].contacts;
-            console.log(res.data[0].contacts);
+            console.log(_this.hotel);
         }).then().catch(function (err) {
             console.log(err);
         });
@@ -13986,23 +14025,51 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("table", { staticClass: "table table-hover" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.contacts, function(contact) {
-          return _c("tr", { key: contact.id }, [
-            _c("td", [_c("h5", [_vm._v(_vm._s(contact.name))])]),
-            _vm._v(" "),
-            _c("td", [_c("h5", [_vm._v(_vm._s(contact.position))])]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(contact.title))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(contact.email))])
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-9 col-sm-12 col-xs-12" }, [
+        _c("div", { staticClass: "x_panel tile " }, [
+          _c("div", { staticClass: "x_title" }, [
+            _c("table", { staticClass: "table table-hover" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.contacts, function(contact) {
+                  return _c("tr", { key: contact.id }, [
+                    _c("td", [_c("h5", [_vm._v(_vm._s(contact.name))])]),
+                    _vm._v(" "),
+                    _c("td", [_c("h5", [_vm._v(_vm._s(contact.position))])]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(contact.title))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(contact.email))])
+                  ])
+                })
+              )
+            ])
           ])
-        })
-      )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3 col-sm-12 col-xs-12" }, [
+        _c("div", { staticClass: "x_panel tile " }, [
+          _c("div", { staticClass: "x_title" }, [
+            _c("h2", [_vm._v(_vm._s(_vm.hotel.name))]),
+            _vm._v(" "),
+            _c("div", { staticClass: "clearfix" })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "x_content" }, [
+            _c("ul", { staticClass: "list-group" }, [
+              _vm.hotel.address
+                ? _c("li", { staticClass: "list-group-item" }, [
+                    _vm._v(_vm._s(_vm.hotel.address))
+                  ])
+                : _vm._e()
+            ])
+          ])
+        ])
+      ])
     ])
   ])
 }

@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+         <div class="row">
+            <div class="col-md-9 col-sm-12 col-xs-12">
+                <div class="x_panel tile ">
+                <div class="x_title">
         <table class="table table-hover">
         <thead>
                 <tr>
@@ -18,6 +22,24 @@
                 </tr>
             </tbody>
         </table>
+                </div>
+                </div>
+            </div>
+        
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="x_panel tile ">
+                    <div class="x_title">
+                        <h2>{{ hotel.name }}</h2>
+                    <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <ul class="list-group">             
+                            <li v-if="hotel.address" class="list-group-item">{{ hotel.address }}</li>
+                        </ul>
+                    </div>
+                    </div>
+            </div>
+         </div>
     </div>
 </template>
 
@@ -25,7 +47,8 @@
     export default {
         data(){
             return {
-                contacts:{}
+                contacts:{},
+                hotel:{}
             }
         },
         mounted() {
@@ -35,8 +58,9 @@
             
             axios.get(`../api/v1/hotel/${id}`)
                 .then(res=>{
+                    this.hotel = res.data[0]
                     this.contacts = res.data[0].contacts
-                    console.log(res.data[0].contacts)
+                    console.log(this.hotel)
                 }).then(
                 )
                 .catch(function(err){

@@ -221,6 +221,15 @@ Perform contact crud
                     {
                         // stateSave: true,
                         "ajax":{"url":"/api/v1/contact","dataSrc":""},
+                        "columnDefs": [ {
+                            "targets": 3,
+                            "render": function ( data, type, row, meta ) {
+                                
+                                return '<a href="'+'/hotel/'+data.id+'">'+data.name+' </a>';
+                              }
+            
+                            }
+                          ],
                         // data:newdata,
                         columns: [
                             {
@@ -231,7 +240,7 @@ Perform contact crud
                             },
                             { data: 'name' },
                             { data: 'email' },
-                            { data: 'hotel.name',
+                            { data: 'hotel',
                             "defaultContent": "<i>Not set</i>" },
                             { data: 'position' },
                             { data: 'title'},
@@ -401,6 +410,14 @@ Perform contact crud
                     // "processing": true,
                     // "serverSide": true,
                     "ajax":{"url":"/api/v1/hotel","dataSrc":""},
+                    "columnDefs": [ {
+                        "targets": 0,
+                        "render": function ( data, type, row, meta ) {
+                            return '<a href="'+'/hotel/'+data.id+'">View</a>';
+                          }
+        
+                        }
+                      ],
                     // data:newdata,
                     columns: [
                         {
