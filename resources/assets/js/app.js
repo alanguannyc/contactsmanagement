@@ -23,6 +23,9 @@ const app = new Vue({
     el: '#app'
 });
 
+import Autocomplete from 'v-autocomplete'
+import 'v-autocomplete/dist/v-autocomplete.css'
+Vue.use(Autocomplete)
 //update data function
 function updateData(url, uid, table) {
     var newData = {};

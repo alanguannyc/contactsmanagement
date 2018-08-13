@@ -65,7 +65,7 @@ var _ = require('lodash');
                     },
         created: function () {
         
-            this.debouncedGetAnswer = _.debounce(this.getUpdate, 1500)
+            this.debouncedGetAnswer = _.debounce(this.getUpdate, 3500)
 
         },
         mounted() {

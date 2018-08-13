@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "ajv": "^6.5.2",
-        "gentelella": "^1.4.0"
+        "gentelella": "^1.4.0",
+        "v-autocomplete": "^1.8.2",
+        "vue2-autocomplete-js": "^0.2.2"
     }
 }

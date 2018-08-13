@@ -16,11 +16,16 @@
         </button>
       </div>
       <div class="modal-body">
+ 
+ 
 
      <form autocomplete="off" id="new_contact">
+
         <div class="form-group autocomplete">
-                <label for="HotelInput">Hotel</label>
-                <input type="text" class="form-control" v-model="hotel.name" id="hotel" name="hotel" placeholder="Enter Hotel" required>
+            <v-autocomplete :items="hotels" v-model="hotel" :get-label="getLabel" :component-item='template' @update-items="updateItems">
+  </v-autocomplete>
+                <!-- <label for="HotelInput">Hotel</label>
+                <input type="text" class="form-control" v-model="hotel.name" id="hotel" name="hotel" placeholder="Enter Hotel" required> -->
                 </div>
         
     <div class="form-group">
@@ -79,12 +84,16 @@
 </template>
 
 <script>
+import Autocomplete from 'vue2-autocomplete-js'
+import HotelList from './HotelList.vue';
     export default {
         data() {
             return {
               contact : "",
               hotel : "",
-              hotelName : ""
+              hotelName : "",
+              hotels: [],
+              template: HotelList
             }
         },
         props: {
@@ -96,13 +105,21 @@
         mounted() {
                 var app = this;
                 var id = this.data.id;
+
+                axios.get('../api/v1/hotel')
+                .then(res=>{
+                    app.hotels = res.data
+                    
+                    // var hotels = newdata.map(a => a.name);
+                    
+                })
+
                 axios.get(`/api/v1/contact/${id}`)
                     .then(function (resp) {
                         app.contact = resp.data[0];
                         app.hotel = resp.data[0].hotel
                         app.hotelName = resp.data[0].hotel.name
                        
-                        
                     })
                     .catch(function (resp) {
                         console.log(resp);
@@ -111,24 +128,21 @@
                 
             },
             
-                
+            
            
         methods: {
-            
+            getLabel (item) {
+                return item.name
+            },
+            updateItems (text) {
+                this.hotels = this.hotels.filter((item) => {
+                return (new RegExp(text.toLowerCase())).test(item.name.toLowerCase())
+            })
+
+            },
             updateContact() {
                 var app = this;
-                
-                
-
-                
-                // delete newContact.hotel; 
-                // console.log(newContact)
-                // axios.post(`/api/v1/contact/edit`, newContact)
-                //     .then(function (resp) {
-                //     })
-                //     .catch(function (resp) {
-                //         console.log(resp);
-                //     });
+ 
                 var newContact = app.contact;
                 newContact.id = app.data.id;
                 if(app.hotel.name != app.hotelName) {
@@ -136,12 +150,10 @@
                                 .then(res=>{
                                     
                                     newContact.hotel_id = res.data.id
-                                        axios.post('../api/v1/contact', newContact)
+
+                                        axios.post('../api/v1/contact/edit', newContact)
                                         .then(res => {
                                             
-                                        }).then(res => {
-                                            var uid = newContact.id
-                                            axios.delete(`../api/v1/contact/${uid}`)
                                         })
                                 })
                             } else {
@@ -169,3 +181,56 @@
     }
     </script>
 
+<style>
+.v-autocomplete
+  .v-autocomplete-input-group
+    .v-autocomplete-input{
+      font-size: 1.2em;
+      padding: 10px 15px;
+      box-shadow: none;
+      border: 1px solid #157977;
+      width: calc(100% - 32px);
+      outline: none;
+      background-color: #eee
+      }
+    .v-autocomplete-selected
+      .v-autocomplete-input
+        {
+            color: black;
+        background-color: #f2fff2
+        }
+  .v-autocomplete-list
+   { 
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-top: none;
+    max-height: 400px;
+    overflow-y: auto;
+    border-bottom: 1px solid #157977;
+    }
+    .v-autocomplete-list-item
+      {cursor: pointer;
+      background-color: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #157977;
+      border-left: 1px solid #157977;
+      border-right: 1px solid #157977;
+      }
+      :last-child
+       { 
+           border-bottom: none
+       }
+      :hover
+        {
+            /* background-color: #eee */
+            }
+
+      abbr
+        {
+            opacity: 0.8;
+        font-size: 0.8em;
+        display: block;
+        font-family :sans-serif;
+        }
+</style>
